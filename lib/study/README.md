@@ -1,0 +1,1 @@
+- tabview滚动位置联动问题，首先要列表缓存，NestedScrollViewInnerScrollPositionKeyWidget，都设置了key，如果child直接为列表并且设置为缓存，滚动位置会分开，但是当header reset时候，列表位置也会reset，但是可以将列表变为stf，并且keepalive

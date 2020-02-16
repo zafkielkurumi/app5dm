@@ -67,10 +67,6 @@ class _TimetableState extends State<Timetable>
                           pinned: false,
                           floating: true,
                           snap: false,
-                          leading: GestureDetector(
-                            child: Icon(Icons.arrow_back),
-                            onTap: () => Navigator.pop(context),
-                          ),
                           title: Text('时间表'),
                           // flexibleSpace: FlexibleSpaceBar(),
                         ),
