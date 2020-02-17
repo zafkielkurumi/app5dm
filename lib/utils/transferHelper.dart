@@ -25,9 +25,13 @@ List<Timeline> tranferTimeline(String html) {
   // smartboxs 周日到周一
   List<Element> smartBoxs = wpbWrappper.querySelectorAll('.smart-box');
   List<Timeline> timeline = [];
-  smartBoxs.forEach((smartBox) {
-    String title = smartBox.querySelector('.smart-box-head').text.substring(1);
-    List<Element> videoItems = smartBox.querySelectorAll('.video-item');
+  for (var smartBox in smartBoxs) {
+     List<Element> videoItems = smartBox.querySelectorAll('.video-item');
+    if (videoItems.isEmpty) {
+      continue;
+    }
+    String title = smartBox.querySelector('.smart-box-head').text?.substring(1);
+    
     List<Seasons> seasons = [];
     // 获取个番剧item
     videoItems.forEach((videoItem) {
@@ -43,7 +47,7 @@ List<Timeline> tranferTimeline(String html) {
           title: videoItem.querySelector('h3 a').innerHtml));
     });
     timeline.add(Timeline(title: title, seasons: seasons));
-  });
+  }
 
   return timeline;
 }

@@ -1,4 +1,4 @@
-import 'package:app5dm/providers/playProvider.dart';
+import 'package:app5dm/providers/playerProvider.dart';
 import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/index.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
@@ -37,78 +37,54 @@ class _PlayerPageState extends State<PlayerPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => PlayerProvderModel(widget.link),
+      create: (_) => PlayerModel(widget.link),
       child: Scaffold(
-          appBar: AppBar(
-            title: Selector<PlayerProvderModel, String>(
-                builder: (_, viderTitle, child) {
-                  return Text('$viderTitle');
-                },
-                selector: (_, playerModel) => playerModel.viderTitle),
-          ),
-          body: NestedScrollView(
-            headerSliverBuilder: (c, b) {
-              return [
-                SliverAppBar(
-                  pinned: true,
-                  floating: false,
-                  leading: GestureDetector(
-                    child: Icon(Icons.arrow_back),
-                    onTap: () => Navigator.pop(context),
-                  ),
-                  title: Text('player'),
-                  flexibleSpace: FlexibleSpaceBar(
-                      // title: Text('data'),
+        appBar: AppBar(
+          title: Selector<PlayerModel, String>(
+              builder: (_, viderTitle, child) {
+                return Text('$viderTitle');
+              },
+              selector: (_, playerModel) => playerModel.viderTitle),
+        ),
+        body: ViewWidget<PlayerModel>(
+          skelelon: PlayerSkeleton(),
+          child: Consumer<PlayerModel>(
+            builder: (_, playerModel, child) {
+             return Column(
+              children: <Widget>[
+                Container(
+                  width: Screen.screenWidth,
+                  height: Screen.setHeight(500),
+                  child: IjkPlayer(
+                      mediaController: playerModel.controller,
+                      // controllerWidgetBuilder: (mediaController) {
+                      //   return DIJKControllerWidget(
+                      //     controller: mediaController,
+                      //   ); // 自定义
+                      // },
+                    ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                        itemBuilder: (c, index) {
+                          var links = playerModel.sources[0].links[index];
+                          return ListTile(
+                            title: Text('${links.title}'),
+                            onTap: () {
+                              playerModel.getData(links.link);
+                            },
+                          );
+                        },
+                        itemCount: playerModel.sources[0].links.length,
                       ),
                 )
-              ];
+              ],
+            );
             },
-            body: ViewWidget<PlayerProvderModel>(
-              skelelon: PlayerSkeleton(),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    width: Screen.screenWidth,
-                    height: Screen.setHeight(500),
-                    child: Selector<PlayerProvderModel, String>(
-                      builder: (c, viderSrc, child) {
-                        controller.setNetworkDataSource(viderSrc,
-                            autoPlay: true);
-                        return IjkPlayer(
-                          mediaController: controller,
-                          controllerWidgetBuilder: (mediaController) {
-                            return DIJKControllerWidget(
-                              controller: mediaController,
-                            ); // 自定义
-                          },
-                        );
-                      },
-                      selector: (_, playerModel) => playerModel.videoSrc,
-                    ),
-                  ),
-                  Expanded(
-                    child: Consumer(
-                      builder: (c, PlayerProvderModel playerModel, _) {
-                        var sources = playerModel.sources;
-                        return ListView.builder(
-                          itemBuilder: (c, index) {
-                            var links = sources[0].links[index];
-                            return ListTile(
-                              title: Text('${links.title}'),
-                              onTap: () {
-                                playerModel.getData(links.link);
-                              },
-                            );
-                          },
-                          itemCount: sources[0].links.length,
-                        );
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-          )),
+            
+          ),
+        ),
+      ),
     );
   }
 }

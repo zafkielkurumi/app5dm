@@ -40,10 +40,10 @@ class _TimetableState extends State<Timetable>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ChangeNotifierProvider(
-      create: (_) => TimelineModel(),
-      child: Scaffold(
-        body: ViewWidget<TimelineModel>(
+    return Scaffold(
+      body: ChangeNotifierProvider<TimelineModel>(
+        create: (_) => TimelineModel(),
+        child: ViewWidget<TimelineModel>(
           skelelon: SkeletonList(
             listTitle: TimeTableSkeleton(),
           ),
@@ -52,9 +52,8 @@ class _TimetableState extends State<Timetable>
               List<Timeline> timelines = timelineModel.timelines;
               intTabController(timelines.length);
 
-              var pinnedHeaderHeight = 
-                  kTextTabBarHeight +
-                  MediaQuery.of(context).padding.top;
+              var pinnedHeaderHeight =
+                  kTextTabBarHeight + MediaQuery.of(context).padding.top;
               return Theme(
                 data: Theme.of(context)
                     .copyWith(splashFactory: NoSplashFactory()),
@@ -74,15 +73,15 @@ class _TimetableState extends State<Timetable>
                           pinned: true,
                           floating: false,
                           snap: false,
-                    
+
                           title: TabBar(
-                                controller: _tabController,
-                                tabs: timelines.map((item) {
-                                  return Tab(
-                                    text: '${item.title}',
-                                  );
-                                }).toList(),
-                              ),
+                            controller: _tabController,
+                            tabs: timelines.map((item) {
+                              return Tab(
+                                text: '${item.title}',
+                              );
+                            }).toList(),
+                          ),
                           // flexibleSpace: FlexibleSpaceBar(),
                         ),
                         // SliverPersistentHeader(

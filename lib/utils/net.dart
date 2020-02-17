@@ -8,7 +8,7 @@ import 'package:oktoast/oktoast.dart';
 class NetUtil {
   static final Dio dio = new Dio(BaseOptions(
     // baseUrl: "https://www.5dm.tv/",
-    connectTimeout: 10000,
+    connectTimeout: 5000,
     receiveTimeout: 10000,
   ));
   static CookieJar cookieJar = new CookieJar();
@@ -18,10 +18,10 @@ class NetUtil {
       ..add(CookieManager(cookieJar))
       ..add((InterceptorsWrapper(onRequest: (RequestOptions options) async {
         print(options.path);
-         print('net start');
+         debugPrint('net start');
         return options;
       }, onResponse: (Response response) async {
-        print('net end');
+        debugPrint('net end');
         return response;
       }, onError: (DioError e) async {
         // showToast('链接失败');
