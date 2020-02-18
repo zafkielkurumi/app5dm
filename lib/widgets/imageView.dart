@@ -5,7 +5,12 @@ class ImageView extends StatelessWidget {
   final String url;
   final num width;
   final num height;
-  ImageView({@required this.url, this.width, this.height});
+  final BoxFit boxFit;
+  ImageView(
+      {@required this.url,
+      this.width,
+      this.height,
+      this.boxFit: BoxFit.fitWidth});
   @override
   Widget build(BuildContext context) {
     return ExtendedImage.network(
@@ -24,6 +29,7 @@ class ImageView extends StatelessWidget {
               image: state.extendedImageInfo?.image,
               width: width,
               height: height,
+              fit: boxFit,
             );
             break;
           default:

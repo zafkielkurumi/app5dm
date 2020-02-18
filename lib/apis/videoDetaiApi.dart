@@ -1,6 +1,6 @@
 
 
-import 'package:app5dm/models/videoDetal_model.dart';
+import 'package:app5dm/models/index.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
 import 'package:app5dm/utils/index.dart';

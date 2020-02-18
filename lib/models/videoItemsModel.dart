@@ -1,16 +1,18 @@
 import 'dart:convert' show json;
 import './protect.dart';
 
-class Timeline {
-  List<Seasons> seasons;
+class VideoItems {
   String title;
+  String more;
+  List<Seasons> seasons;
 
-  Timeline({
-    this.seasons,
+  VideoItems({
     this.title,
+    this.more,
+    this.seasons,
   });
 
-  factory Timeline.fromJson(jsonRes) {
+  factory VideoItems.fromJson(jsonRes) {
     if (jsonRes == null) return null;
 
     List<Seasons> seasons = jsonRes['seasons'] is List ? [] : null;
@@ -23,15 +25,17 @@ class Timeline {
         }
       }
     }
-    return Timeline(
+    return VideoItems(
+      title: convertValueByType(jsonRes['title'], String, stack: "VideoItems-title"),
+      more: convertValueByType(jsonRes['more'], String, stack: "VideoItems-more"),
       seasons: seasons,
-      title: convertValueByType(jsonRes['title'], String, stack: "Timeline-title"),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'seasons': seasons,
         'title': title,
+        'more': more,
+        'seasons': seasons,
       };
   @override
   String toString() {
@@ -71,3 +75,15 @@ class Seasons {
     return json.encode(this);
   }
 }
+
+// {
+//  "title": "4",
+//  "more": "5",
+//  "seasons": [
+//   {
+//   "imgUrl": "4",
+//   "stringId": "4",
+//   "title":"5"
+// }
+// ]
+// }

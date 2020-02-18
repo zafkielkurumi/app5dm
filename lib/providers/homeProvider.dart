@@ -1,4 +1,4 @@
-import 'package:app5dm/models/timelime_model.dart';
+import 'package:app5dm/models/index.dart';
 import 'package:flutter/foundation.dart';
 
 import './baseProvider.dart';
@@ -10,7 +10,7 @@ class HomeModel extends BaseProvider {
     loadData();
   }
 
-  List<Timeline> homelines = [];
+  List<VideoItems> homelines = [];
 
   loadData() async {
     try {

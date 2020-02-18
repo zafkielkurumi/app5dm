@@ -1,4 +1,4 @@
-import 'package:app5dm/models/timelime_model.dart';
+import 'package:app5dm/models/index.dart';
 
 import './baseProvider.dart';
 import 'package:app5dm/apis/homeApi.dart';
@@ -9,7 +9,7 @@ class TimelineModel extends BaseProvider {
     loadData();
   }
 
-  List<Timeline> timelines = [];
+  List<VideoItems> timelines = [];
 
   loadData() async {
     try {

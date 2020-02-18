@@ -1,4 +1,4 @@
-import 'package:app5dm/models/videoDetal_model.dart';
+import 'package:app5dm/models/index.dart';
 import 'package:app5dm/providers/baseProvider.dart';
 import 'package:app5dm/apis/index.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
@@ -8,7 +8,7 @@ class PlayerModel extends BaseProvider {
     getData(link);
   }
   String _videoSrc;
-  String _viderTitle;
+  String _videoTitle;
   List<Sources> _sources = [];
   String _link;
   IjkMediaController _controller = IjkMediaController();
@@ -18,7 +18,7 @@ class PlayerModel extends BaseProvider {
     try {
       VideoDetail videoDetail = await VideoDetailApi.getVideoDetail(link);
     _videoSrc = videoDetail.videoSrc;
-    _viderTitle = videoDetail.videoTitle;
+    _videoTitle = videoDetail.videoTitle;
     _sources = videoDetail.sources;
     controller.setNetworkDataSource(_videoSrc);
     setContent();
@@ -33,8 +33,14 @@ class PlayerModel extends BaseProvider {
   }
 
   String get videoSrc => _videoSrc;
-  String get viderTitle => _viderTitle;
+  String get videoTitle => _videoTitle;
   List<Sources> get sources => _sources;
   String get link => _link;
   IjkMediaController get controller => _controller;
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
 }

@@ -1,7 +1,6 @@
 import 'package:app5dm/providers/playerProvider.dart';
 import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/index.dart';
-import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart' hide NestedScrollView;
 import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
@@ -21,8 +20,6 @@ class PlayerPage extends StatefulWidget {
 }
 
 class _PlayerPageState extends State<PlayerPage> {
-  IjkMediaController controller = IjkMediaController();
-
   @override
   void initState() {
     super.initState();
@@ -30,7 +27,6 @@ class _PlayerPageState extends State<PlayerPage> {
 
   @override
   void dispose() {
-    controller?.dispose();
     super.dispose();
   }
 
@@ -41,31 +37,38 @@ class _PlayerPageState extends State<PlayerPage> {
       child: Scaffold(
         appBar: AppBar(
           title: Selector<PlayerModel, String>(
-              builder: (_, viderTitle, child) {
-                return Text('$viderTitle');
+              builder: (_, videoTitle, child) {
+                return Text('$videoTitle');
               },
-              selector: (_, playerModel) => playerModel.viderTitle),
+              selector: (_, playerModel) => playerModel.videoTitle),
         ),
         body: ViewWidget<PlayerModel>(
           skelelon: PlayerSkeleton(),
-          child: Consumer<PlayerModel>(
-            builder: (_, playerModel, child) {
-             return Column(
-              children: <Widget>[
-                Container(
-                  width: Screen.screenWidth,
-                  height: Screen.setHeight(500),
-                  child: IjkPlayer(
-                      mediaController: playerModel.controller,
-                      // controllerWidgetBuilder: (mediaController) {
-                      //   return DIJKControllerWidget(
-                      //     controller: mediaController,
-                      //   ); // 自定义
-                      // },
-                    ),
-                ),
-                Expanded(
-                  child: ListView.builder(
+          child: Column(
+            children: <Widget>[
+              Selector<PlayerModel, IjkMediaController>(
+                  builder: (_, controller, child) {
+                    return Container(
+                      width: Screen.screenWidth,
+                      height: Screen.setHeight(500),
+                      child: IjkPlayer(
+                        mediaController: controller,
+                        // controllerWidgetBuilder: (mediaController) {
+                        //   return DIJKControllerWidget(
+                        //     controller: mediaController,
+                        //   ); // 自定义
+                        // },
+                      ),
+                    );
+                  },
+                  selector: (_, playerModel) => playerModel.controller),
+              Expanded(
+                child: Selector<PlayerModel, PlayerModel>(
+                    selector: (_, playerModel) => playerModel,
+                    shouldRebuild: (oldModel, newModel) =>
+                        oldModel.sources != newModel.sources,
+                    builder: (_, playerModel, child) {
+                      return ListView.builder(
                         itemBuilder: (c, index) {
                           var links = playerModel.sources[0].links[index];
                           return ListTile(
@@ -76,12 +79,10 @@ class _PlayerPageState extends State<PlayerPage> {
                           );
                         },
                         itemCount: playerModel.sources[0].links.length,
-                      ),
-                )
-              ],
-            );
-            },
-            
+                      );
+                    }),
+              )
+            ],
           ),
         ),
       ),

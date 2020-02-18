@@ -1,5 +1,6 @@
+import 'dart:async';
 import 'package:app5dm/app5dm_route.dart';
-import 'package:app5dm/models/timelime_model.dart';
+import 'package:app5dm/models/index.dart';
 import 'package:app5dm/providers/homeProvider.dart';
 import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/index.dart';
@@ -14,7 +15,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   @override
-  bool get wantKeepAlive => false;
+  bool get wantKeepAlive => true;
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -24,17 +25,70 @@ class _HomePageState extends State<HomePage>
         create: (_) => HomeModel(),
         child: ViewWidget<HomeModel>(
           skelelon: Loading(),
-          child: Selector<HomeModel, List<Timeline>>(
+          child: Selector<HomeModel, List<VideoItems>>(
             selector: (_, homeModel) => homeModel.homelines,
             builder: (_, homelines, child) {
-              return Column(
-                children: <Widget>[
-                  Container(
-                    height: 300,
-                    child: HomeSlider(homelines.first.seasons),
-                  ),
-                  Expanded(child: Container())
-                ],
+              return Padding(
+                padding: EdgeInsets.all(10),
+                child: CustomScrollView(
+                  slivers: List.generate(homelines.length, (index) {
+                    var videoItem = homelines[index];
+                    if (index == 0) {
+                      return SliverToBoxAdapter(
+                        child: HomeSlider(
+                          seasons: videoItem.seasons,
+                          width: Screen.width - 20,
+                          height: tranferImageWidthToHeiht(Screen.width - 20),
+                        ),
+                      );
+                    } else {
+                      return SliverToBoxAdapter(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text('${videoItem.title}'),
+                                GestureDetector(
+                                  onTap: () {},
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text('查看更多2'),
+                                      Icon(Icons.keyboard_arrow_right)
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                            Wrap(
+                                spacing: Screen.setWidth(10),
+                                children: List.generate(
+                                    videoItem.seasons.length, (index) {
+                                  var season = videoItem.seasons[index];
+                                  return GestureDetector(
+                                    onTap: () {
+                                      print(season.stringId);
+                                      Navigator.of(context).pushNamed(
+                                        Routes.PLAYERPAGE,
+                                        arguments: {"link": season.stringId},
+                                      );
+                                    },
+                                    child: Container(
+                                      width: (Screen.width - 20 - Screen.setWidth(10)) /2  ,
+                                      child: VideoItemIntroduce(
+                                      imgUrl: season.imgUrl,
+                                      title: season.title,
+                                    ),
+                                    ),
+                                  );
+                                }))
+                          ],
+                        ),
+                      );
+                    }
+                  }),
+                ),
               );
             },
           ),
@@ -46,22 +100,54 @@ class _HomePageState extends State<HomePage>
 
 class HomeSlider extends StatefulWidget {
   final List<Seasons> seasons;
-  HomeSlider(this.seasons);
+  final double height;
+  final double width;
+  HomeSlider({@required this.seasons, this.height: 300, this.width});
   @override
   _HomeSliderState createState() => _HomeSliderState();
 }
 
 class _HomeSliderState extends State<HomeSlider> {
-  final PageController _pageController = PageController();
-   List<Seasons> get seasons => widget.seasons;
+  final PageController _pageController = PageController(viewportFraction: 1.0);
+  List<Seasons> get seasons => widget.seasons;
+  Timer _timer;
+  @override
+  void initState() {
+    // Future.microtask(() {});
+    _pageController.addListener(() {
+      print('object');
+    });
+    super.initState();
+  }
+
+  startTimer() {
+    _timer.cancel();
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      _pageController.nextPage(duration: null, curve: null);
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: _pageController,
-      children: List.generate(seasons.length, (index) {
-        var season = seasons[index];
-        return SliderItem(season);
-      }),
+    return Container(
+      height: widget.height,
+      width: widget.width,
+      child: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          print(index);
+        },
+        children: List.generate(seasons.length, (index) {
+          var season = seasons[index];
+          return SliderItem(season);
+        }),
+      ),
     );
   }
 }
@@ -75,17 +161,22 @@ class SliderItem extends StatelessWidget {
       children: <Widget>[
         ImageView(url: _season.imgUrl),
         Padding(
-            padding: EdgeInsets.all(5),
-            child: Row(
-              children: <Widget>[
-                SizedBox(
-                  width: Screen.setWidth(100),
-                  child: Text('${_season.title}', overflow: TextOverflow.ellipsis, softWrap: false,),
+          padding: EdgeInsets.all(5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              SizedBox(
+                width: Screen.setWidth(500),
+                child: Text(
+                  '${_season.title}',
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
                 ),
-                Expanded(child: Text('右'))
-              ],
-            ),
-          )
+              ),
+              Text('右')
+            ],
+          ),
+        )
       ],
     );
   }

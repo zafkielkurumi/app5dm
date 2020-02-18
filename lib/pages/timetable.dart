@@ -1,5 +1,5 @@
 import 'package:app5dm/app5dm_route.dart';
-import 'package:app5dm/models/timelime_model.dart';
+import 'package:app5dm/models/index.dart';
 import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/index.dart';
 import 'package:flutter/material.dart' hide NestedScrollView;
@@ -47,13 +47,15 @@ class _TimetableState extends State<Timetable>
           skelelon: SkeletonList(
             listTitle: TimeTableSkeleton(),
           ),
-          child: Consumer(
+          child: Selector<TimelineModel, TimelineModel>(
+            selector: (_, timelineModel) => timelineModel,
+            shouldRebuild: (oldModel, newModel) => oldModel.timelines != newModel.timelines,
             builder: (_, TimelineModel timelineModel, child) {
-              List<Timeline> timelines = timelineModel.timelines;
+              List<VideoItems> timelines = timelineModel.timelines;
               intTabController(timelines.length);
 
               var pinnedHeaderHeight =
-                  kTextTabBarHeight + MediaQuery.of(context).padding.top;
+                  kTextTabBarHeight + Screen.statusHeight;
               return Theme(
                 data: Theme.of(context)
                     .copyWith(splashFactory: NoSplashFactory()),
@@ -78,30 +80,12 @@ class _TimetableState extends State<Timetable>
                             controller: _tabController,
                             tabs: timelines.map((item) {
                               return Tab(
-                                text: '${item.title}',
+                                text: '${item.title.substring(1)}',
                               );
                             }).toList(),
                           ),
                           // flexibleSpace: FlexibleSpaceBar(),
                         ),
-                        // SliverPersistentHeader(
-                        //   pinned: true,
-                        //   delegate: SliverPersistentHeaderWidget(
-                        //     maxHeight: kTextTabBarHeight,
-                        //     minHeigth: kTextTabBarHeight,
-                        //     child: Container(
-                        //       color: Colors.black87,
-                        //       child: TabBar(
-                        //         controller: _tabController,
-                        //         tabs: timelines.map((item) {
-                        //           return Tab(
-                        //             text: '${item.title}',
-                        //           );
-                        //         }).toList(),
-                        //       ),
-                        //     ),
-                        //   ),
-                        // ),
                       ];
                     },
                     pinnedHeaderSliverHeightBuilder: () {
@@ -116,7 +100,7 @@ class _TimetableState extends State<Timetable>
                             child: TabBarView(
                           controller: _tabController,
                           children: List.generate(timelines.length, (index) {
-                            Timeline timeline = timelines[index];
+                            var timeline = timelines[index];
 
                             return NestedScrollViewInnerScrollPositionKeyWidget(
                                 Key('tab$index'), TimeLineList(timeline));
@@ -157,7 +141,7 @@ class _TimetableState extends State<Timetable>
 }
 
 class TimeLineList extends StatefulWidget {
-  final Timeline timeline;
+  final VideoItems timeline;
   TimeLineList(this.timeline);
   @override
   _TimeLineListState createState() => _TimeLineListState();
@@ -165,7 +149,7 @@ class TimeLineList extends StatefulWidget {
 
 class _TimeLineListState extends State<TimeLineList>
     with AutomaticKeepAliveClientMixin {
-  Timeline get timeline => widget.timeline;
+  get timeline => widget.timeline;
 
   @override
   bool get wantKeepAlive => true;
@@ -203,7 +187,7 @@ class SeasonTitle extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Container(
-            height: Screen.setWidth(113),
+            height: Screen.setWidth(tranferImageWidthToHeiht(200)),
             width: Screen.setWidth(200),
             decoration: BoxDecoration(
                 // border: Border.all(),
