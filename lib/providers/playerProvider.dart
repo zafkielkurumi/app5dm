@@ -7,10 +7,10 @@ class PlayerModel extends BaseProvider {
   PlayerModel(String link) {
     getData(link);
   }
-  String _videoSrc;
-  String _videoTitle;
+  String _videoSrc = '';
+  String _videoTitle = '';
   List<Sources> _sources = [];
-  String _link;
+  String _link = '';
   IjkMediaController _controller = IjkMediaController();
 
   Future getData(String link) async {

@@ -8,8 +8,11 @@ import 'package:oktoast/oktoast.dart';
 class NetUtil {
   static final Dio dio = new Dio(BaseOptions(
     // baseUrl: "https://www.5dm.tv/",
-    connectTimeout: 5000,
+    connectTimeout: 10000,
     receiveTimeout: 10000,
+    headers: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362"
+    }
   ));
   static CookieJar cookieJar = new CookieJar();
 

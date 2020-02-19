@@ -20,7 +20,6 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      appBar: AppBar(title: Text('todo search')),
       body: ChangeNotifierProvider<HomeModel>(
         create: (_) => HomeModel(),
         child: ViewWidget<HomeModel>(
@@ -28,68 +27,95 @@ class _HomePageState extends State<HomePage>
           child: Selector<HomeModel, List<VideoItems>>(
             selector: (_, homeModel) => homeModel.homelines,
             builder: (_, homelines, child) {
-              return Padding(
-                padding: EdgeInsets.all(10),
-                child: CustomScrollView(
-                  slivers: List.generate(homelines.length, (index) {
+              return Theme(data: Theme.of(context).copyWith(
+                splashFactory: NoSplashFactory()
+              ), child: CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    floating: true,
+                    leading:
+                        IconButton(icon: Icon(Icons.menu), onPressed: null),
+                    title: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(Routes.SEARCHPAGE);
+                      },
+                      child: Container(
+                      height: Screen.setHeight(40),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                    ),
+                    ),
+                  ),
+                  ...List.generate(homelines.length, (index) {
                     var videoItem = homelines[index];
                     if (index == 0) {
-                      return SliverToBoxAdapter(
+                      return SliverPadding(padding: EdgeInsets.only(left: 10, right: 10, top: 10), sliver: SliverToBoxAdapter(
                         child: HomeSlider(
                           seasons: videoItem.seasons,
                           width: Screen.width - 20,
                           height: tranferImageWidthToHeiht(Screen.width - 20),
                         ),
-                      );
+                      ),);
                     } else {
                       return SliverToBoxAdapter(
-                        child: Column(
+                        child: Padding(padding: EdgeInsets.only(left:10,right:10), child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text('${videoItem.title}'),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Row(
-                                    children: <Widget>[
-                                      Text('查看更多2'),
-                                      Icon(Icons.keyboard_arrow_right)
-                                    ],
-                                  ),
-                                )
-                              ],
+                            Padding(
+                              padding: EdgeInsets.only(top: 10, bottom: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Text('${videoItem.title}'),
+                                  GestureDetector(
+                                    onTap: () {},
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text('查看更多'),
+                                        Icon(Icons.keyboard_arrow_right)
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                             Wrap(
-                                spacing: Screen.setWidth(10),
+                                spacing: Screen.setWidth(20),
+                                runSpacing: Screen.setWidth(10),
                                 children: List.generate(
                                     videoItem.seasons.length, (index) {
                                   var season = videoItem.seasons[index];
+                                  var itemWidth = (Screen.width -
+                                          20 -
+                                          Screen.setWidth(20)) /
+                                      2;
                                   return GestureDetector(
                                     onTap: () {
-                                      print(season.stringId);
                                       Navigator.of(context).pushNamed(
                                         Routes.PLAYERPAGE,
                                         arguments: {"link": season.stringId},
                                       );
                                     },
                                     child: Container(
-                                      width: (Screen.width - 20 - Screen.setWidth(10)) /2  ,
+                                      width: itemWidth,
                                       child: VideoItemIntroduce(
-                                      imgUrl: season.imgUrl,
-                                      title: season.title,
-                                    ),
+                                        imgUrl: season.imgUrl,
+                                        title: season.title,
+                                        width: itemWidth,
+                                      ),
                                     ),
                                   );
                                 }))
                           ],
-                        ),
+                        ),),
                       );
                     }
                   }),
-                ),
-              );
+                ],
+              ),);
             },
           ),
         ),

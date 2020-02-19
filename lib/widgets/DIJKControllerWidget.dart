@@ -204,7 +204,6 @@ class DIJKControllerWidgetState extends State<DIJKControllerWidget>
     var isFull = widget.currentFullScreenState;
 
     return IconButton(
-      color: Colors.white,
       icon: Icon(isFull ? Icons.fullscreen_exit : Icons.fullscreen),
       onPressed: fullScreen,
     );
@@ -252,7 +251,6 @@ class DIJKControllerWidgetState extends State<DIJKControllerWidget>
     var theme = typography.white;
     const style = const TextStyle(
       fontSize: 15.0,
-      color: Colors.white,
       fontWeight: FontWeight.normal,
     );
     var mergedTextStyle = theme.body2.merge(style);
@@ -338,7 +336,6 @@ class DIJKControllerWidgetState extends State<DIJKControllerWidget>
       children: <Widget>[
         Icon(
           iconData,
-          color: Colors.white,
           size: 40.0,
         ),
         Text(
@@ -432,7 +429,6 @@ class DIJKControllerWidgetState extends State<DIJKControllerWidget>
       children: <Widget>[
         Icon(
           iconData,
-          color: Colors.white,
           size: 25.0,
         ),
         Padding(
@@ -586,7 +582,6 @@ class PortraitController extends StatelessWidget {
     );
     widget = DefaultTextStyle(
       style: const TextStyle(
-        color: Colors.white,
       ),
       child: widget,
     );
@@ -638,7 +633,6 @@ class PortraitController extends StatelessWidget {
       onPressed: () {
         controller.playOrPause(pauseOther: playWillPauseOther);
       },
-      color: Colors.white,
       icon: Icon(info.isPlaying ? Icons.pause : Icons.play_arrow),
       iconSize: 25.0,
     );
@@ -729,7 +723,6 @@ class DIJKHeader extends StatelessWidget {
           IconButton(
               icon: Icon(
                 Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back,
-                color: Colors.white,
               ),
               onPressed: () {
                 Navigator.of(context).pop();
@@ -782,12 +775,12 @@ class _DIJKFooterState extends State<DIJKFooter> {
 
   Widget buildCurrentTime() {
     return haveTime
-        ? Text(TimeHelper.getTimeText(info.currentPosition), style: TextStyle(color: Colors.white))
+        ? Text(TimeHelper.getTimeText(info.currentPosition),)
         : Container();
   }
 
   Widget buildMaxTime() {
-    return haveTime ? Text(TimeHelper.getTimeText(info.duration), style: TextStyle(color: Colors.white),) : Container();
+    return haveTime ? Text(TimeHelper.getTimeText(info.duration),) : Container();
   }
 
   @override
@@ -807,7 +800,6 @@ class _DIJKFooterState extends State<DIJKFooter> {
             onPressed: () {
               controller.playOrPause(pauseOther: widget.playWillPauseOther);
             },
-            color: Colors.white,
             icon: Icon(info.isPlaying ? Icons.pause : Icons.play_arrow),
             iconSize: 25.0,
           ),
@@ -820,7 +812,6 @@ class _DIJKFooterState extends State<DIJKFooter> {
           IconButton(
               icon: Icon(
                 Icons.fullscreen,
-                color: Colors.white,
               ),
               onPressed: null)
         ],

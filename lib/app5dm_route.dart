@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 
 import 'pages/indexPage.dart';
 import 'pages/playerPage.dart';
+import 'pages/search/searchPage.dart';
+import 'pages/search/searchResultPage.dart';
 import 'pages/splashPage.dart';
 
 RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
@@ -18,6 +20,22 @@ RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
         ),
         showStatusBar: false,
         routeName: "playerPage",
+      );
+    case "/searchPage":
+      return RouteResult(
+        widget: SearchPage(),
+        showStatusBar: false,
+        routeName: "searchPage",
+        pageRouteType: PageRouteType.transparent,
+      );
+    case "/searchResultPage":
+      return RouteResult(
+        widget: SearchResultPage(
+          keyword: arguments['keyword'],
+        ),
+        showStatusBar: false,
+        routeName: "searchResultPage",
+        pageRouteType: PageRouteType.transparent,
       );
     case "app5dm://homePage":
       return RouteResult(
@@ -74,6 +92,23 @@ class Routes {
   /// [arguments] : [link]
   /// [showStatusBar] : false
   static const String PLAYERPAGE = "/playerPage";
+
+  /// searchPage
+  ///
+  /// [name] : /searchPage
+  /// [routeName] : searchPage
+  /// [showStatusBar] : false
+  /// [pageRouteType] : PageRouteType.transparent
+  static const String SEARCHPAGE = "/searchPage";
+
+  /// searchResultPage
+  ///
+  /// [name] : /searchResultPage
+  /// [routeName] : searchResultPage
+  /// [arguments] : [keyword]
+  /// [showStatusBar] : false
+  /// [pageRouteType] : PageRouteType.transparent
+  static const String SEARCHRESULTPAGE = "/searchResultPage";
 
   /// homePage
   ///

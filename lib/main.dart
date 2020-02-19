@@ -25,7 +25,11 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: '5dm',
       theme: ThemeData(
+        brightness: Brightness.light,
+        primaryColorBrightness: Brightness.dark,
+        accentColorBrightness: Brightness.dark,
         primaryColor: Colors.pink,
+        scaffoldBackgroundColor: Colors.grey[200]
       ),
       navigatorObservers: [
         FFNavigatorObserver(routeChange:

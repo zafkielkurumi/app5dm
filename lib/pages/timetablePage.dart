@@ -68,6 +68,7 @@ class _TimetableState extends State<Timetable>
                           pinned: false,
                           floating: true,
                           snap: false,
+                          elevation: 0, //
                           title: Text('时间表'),
                           // flexibleSpace: FlexibleSpaceBar(),
                         ),
