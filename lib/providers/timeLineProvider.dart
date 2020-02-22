@@ -16,7 +16,7 @@ class TimelineModel extends BaseProvider {
        timelines = await HomeApi.getTimeline();
        setContent();
     } catch (e) {
-      onError();
+      onError(e);
     }
 
  }

@@ -44,7 +44,7 @@ function readFile(fileName, dirpath) {
         
         let name = fileName.substring(0, fileName.lastIndexOf('.'));
         let url = filePath.substring(filePath.indexOf(basename));
-        arr.push(`static String ${camelName(name)} = '/${url}';\n\t`)
+        arr.push(`static String ${camelName(name)} = '${url}';\n\t`)
         
     } else {
         readDir(filePath);

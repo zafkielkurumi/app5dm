@@ -1,5 +1,5 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:flutter/cupertino.dart';
 
 enum ViewState {
@@ -7,6 +7,7 @@ enum ViewState {
   error, // 错误, 重新获取
   empty, // 无数据
   unAuth, // 未登录
+  pending, // 请求中
   content,
 }
 
@@ -15,35 +16,38 @@ enum ViewState {
   bool _dispose = false;
 
   ViewState get viewState => _viewState;
-
-  setViewSate(ViewState viewState) {
-    _viewState = viewState;
+  set viewState(value) {
+     _viewState = value;
     notifyListeners();
   }
 
+
+
   setUnAuth() {
-    setViewSate(ViewState.unAuth);
-    showToast('需要登录');
+    viewState = ViewState.unAuth;
+  }
+  setPending() {
+    viewState = ViewState.pending;
   }
 
   setError() {
-    setViewSate(ViewState.error);
+    viewState = ViewState.error;
   }
 
   setEmpty() {
-    setViewSate(ViewState.empty);
+    viewState = ViewState.empty;
   }
 
   setFirst() {
-    setViewSate(ViewState.first);
+    viewState = ViewState.first;
   }
 
   setContent() {
-    setViewSate(ViewState.content);
+    viewState = ViewState.content;
   }
 
 
-  onError() {
+  onError( e) {
      if (viewState == ViewState.first) {
         setError();
       }

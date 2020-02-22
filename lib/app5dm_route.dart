@@ -5,7 +5,9 @@
 
 import 'package:flutter/widgets.dart';
 
+import 'pages/home/serialPage.dart';
 import 'pages/indexPage.dart';
+import 'pages/loginPage.dart';
 import 'pages/playerPage.dart';
 import 'pages/search/searchPage.dart';
 import 'pages/search/searchResultPage.dart';
@@ -13,6 +15,12 @@ import 'pages/splashPage.dart';
 
 RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
   switch (name) {
+    case "/loginPage":
+      return RouteResult(
+        widget: LoginPage(),
+        showStatusBar: false,
+        routeName: "loginPage",
+      );
     case "/playerPage":
       return RouteResult(
         widget: PlayerPage(
@@ -36,6 +44,15 @@ RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
         showStatusBar: false,
         routeName: "searchResultPage",
         pageRouteType: PageRouteType.transparent,
+      );
+    case "/serialPage":
+      return RouteResult(
+        widget: SerialPage(
+          link: arguments['link'],
+          title: arguments['title'],
+        ),
+        showStatusBar: false,
+        routeName: "serialPage",
       );
     case "app5dm://homePage":
       return RouteResult(
@@ -85,6 +102,13 @@ enum PageRouteType { material, cupertino, transparent }
 class Routes {
   const Routes._();
 
+  /// loginPage
+  ///
+  /// [name] : /loginPage
+  /// [routeName] : loginPage
+  /// [showStatusBar] : false
+  static const String LOGINPAGE = "/loginPage";
+
   /// playerPage
   ///
   /// [name] : /playerPage
@@ -109,6 +133,14 @@ class Routes {
   /// [showStatusBar] : false
   /// [pageRouteType] : PageRouteType.transparent
   static const String SEARCHRESULTPAGE = "/searchResultPage";
+
+  /// serialPage
+  ///
+  /// [name] : /serialPage
+  /// [routeName] : serialPage
+  /// [arguments] : [link, title]
+  /// [showStatusBar] : false
+  static const String SERIALPAGE = "/serialPage";
 
   /// homePage
   ///

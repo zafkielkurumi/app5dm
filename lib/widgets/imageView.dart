@@ -26,6 +26,7 @@ class ImageView extends StatelessWidget {
             break;
           case LoadState.completed:
             loader = ExtendedRawImage(
+              
               image: state.extendedImageInfo?.image,
               width: width,
               height: height,

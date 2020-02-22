@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.3.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -28,20 +28,27 @@ dependencies:
   extended_image: 0.7.1
   extended_nested_scroll_view: 0.3.8
   flutter_ijkplayer: 0.3.5+1
-  flutter_screenutil: 1.0.2
-  # flutter_shine
+  flutter_liquidcore: 1.1.0 # 运行js
+  flutter_screenutil: 1.0.2 # 屏幕适配
+  flutter_swiper: 1.1.6
+  # flutter_webview_plugin: 0.3.10+1
+  hive: 1.4.0+1
+  loading_more_list: 1.0.5
   oktoast: 2.3.1
   provider: 4.0.2
-  path_provider: 1.6.0
+  pull_to_refresh_notification: 0.3.4
   html: 0.14.0+3
   shimmer: 1.0.1 # 闪亮
+  
+  
+  
   
   
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  ff_annotation_route: 1.1.8
+  ff_annotation_route: 1.1.9
 
 
 # For information on the generic Dart part of this file, see the

@@ -10,7 +10,12 @@ class HomeApi {
 
   static Future<List<VideoItems>> getHomePage() async {
     var res = await NetUtil.dio.get(Api.homePage);
-    return transferHomePage(res.toString());
+    return transformHomePage(res.toString());
+  } 
+
+  static Future<List<Seasons>> getSerial({String link, int page: 1, String orderBy: 'date'}) async {
+    var res = await NetUtil.dio.get(link, queryParameters: {"page": page, "orderby": orderBy});
+    return transformSerial(res.toString());
   } 
 }
 

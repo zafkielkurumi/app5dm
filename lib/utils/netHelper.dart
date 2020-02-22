@@ -10,9 +10,7 @@ class NetUtil {
     // baseUrl: "https://www.5dm.tv/",
     connectTimeout: 10000,
     receiveTimeout: 10000,
-    headers: {
-      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 Edge/18.18362"
-    }
+    followRedirects: true
   ));
   static CookieJar cookieJar = new CookieJar();
 
@@ -27,7 +25,9 @@ class NetUtil {
         debugPrint('net end');
         return response;
       }, onError: (DioError e) async {
-        // showToast('链接失败');
+        if (e.response.statusCode == 503) {
+          showToast('503');
+        }
         debugPrint("dioError: ${e.message}");
         return e;
       })));

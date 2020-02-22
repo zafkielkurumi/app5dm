@@ -1,5 +1,6 @@
 import 'package:app5dm/apis/searchApi.dart';
 import 'package:app5dm/models/index.dart';
+import 'package:app5dm/utils/index.dart';
 import 'package:flutter/foundation.dart';
 import './baseProvider.dart';
 
@@ -17,7 +18,7 @@ class SearchModel extends BaseProvider {
   }
   String get keyword => _keyword;
 
-  List<VideoItems> videoItems = [];
+  List<Seasons> videoItems = [];
 
   loadData(String value) async {
     keyword = value;
@@ -25,7 +26,8 @@ class SearchModel extends BaseProvider {
       videoItems = await SearchApi.search(keyword, page);
       setContent();
     } catch (e) {
-      onError();
+      tranferForbiden(e.response.toString());
+      onError(e);
       debugPrint(e.toString());
     }
   }

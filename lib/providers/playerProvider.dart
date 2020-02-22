@@ -16,16 +16,21 @@ class PlayerModel extends BaseProvider {
   Future getData(String link) async {
     _link = link;
     try {
-      VideoDetail videoDetail = await VideoDetailApi.getVideoDetail(link);
-    _videoSrc = videoDetail.videoSrc;
-    _videoTitle = videoDetail.videoTitle;
-    _sources = videoDetail.sources;
-    controller.setNetworkDataSource(_videoSrc);
-    setContent();
+      var videoDetail = await VideoDetailApi.getVideoDetail(link);
+      if (videoDetail != null) {
+        _videoSrc = videoDetail.videoSrc;
+        _videoTitle = videoDetail.videoTitle;
+        _sources = videoDetail.sources;
+        controller.setNetworkDataSource(_videoSrc);
+        setContent();
+      } else {
+        setUnAuth();
+      }
     } catch (e) {
-      onError();
+      onError(e);
     }
   }
+
   @override
   retry() {
     setFirst();

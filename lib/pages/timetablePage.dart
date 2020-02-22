@@ -17,7 +17,7 @@ class _TimetableState extends State<Timetable>
   TabController _tabController;
 
   @override
-  bool get wantKeepAlive => false;
+  bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
@@ -49,13 +49,13 @@ class _TimetableState extends State<Timetable>
           ),
           child: Selector<TimelineModel, TimelineModel>(
             selector: (_, timelineModel) => timelineModel,
-            shouldRebuild: (oldModel, newModel) => oldModel.timelines != newModel.timelines,
+            shouldRebuild: (oldModel, newModel) =>
+                oldModel.timelines != newModel.timelines,
             builder: (_, TimelineModel timelineModel, child) {
               List<VideoItems> timelines = timelineModel.timelines;
               intTabController(timelines.length);
 
-              var pinnedHeaderHeight =
-                  kTextTabBarHeight + Screen.statusHeight;
+              var pinnedHeaderHeight = kTextTabBarHeight + Screen.statusHeight;
               return Theme(
                 data: Theme.of(context)
                     .copyWith(splashFactory: NoSplashFactory()),
@@ -63,6 +63,7 @@ class _TimetableState extends State<Timetable>
                   onRefresh: timelineModel.refresh,
                   child: NestedScrollView(
                     headerSliverBuilder: (c, b) {
+                      print(Theme.of(context).primaryTextTheme.display1.color);
                       return [
                         SliverAppBar(
                           pinned: false,
@@ -76,16 +77,27 @@ class _TimetableState extends State<Timetable>
                           pinned: true,
                           floating: false,
                           snap: false,
-
                           title: TabBar(
                             controller: _tabController,
+                            indicatorSize: TabBarIndicatorSize.label,
+                            labelColor: Theme.of(context).primaryColor,
+                            unselectedLabelColor: Theme.of(context).primaryTextTheme.display1.color,
+                            indicator: BoxDecoration(
+                              color: Theme.of(context).primaryTextTheme.display1.color,
+                              shape: BoxShape.circle,
+                            ),
                             tabs: timelines.map((item) {
                               return Tab(
-                                text: '${item.title.substring(1)}',
+                                child: SizedBox(
+                                  child: Center(
+                                    child: Text(
+                                      '${item.title.substring(1)}',
+                                    ),
+                                  ),
+                                ),
                               );
                             }).toList(),
                           ),
-                          // flexibleSpace: FlexibleSpaceBar(),
                         ),
                       ];
                     },
@@ -204,40 +216,6 @@ class SeasonTitle extends StatelessWidget {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ))
-        ],
-      ),
-    );
-  }
-}
-
-class TimeTableSkeleton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(5),
-      child: Row(
-        children: <Widget>[
-          SkeletonBox(
-            height: Screen.setHeight(113),
-            width: Screen.setWidth(200),
-          ),
-          SizedBox(
-            width: Screen.setWidth(10),
-          ),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SkeletonBox(
-                  width: Screen.setWidth(200),
-                ),
-                SizedBox(
-                  height: Screen.setHeight(20),
-                ),
-                SkeletonBox()
-              ],
-            ),
-          )
         ],
       ),
     );

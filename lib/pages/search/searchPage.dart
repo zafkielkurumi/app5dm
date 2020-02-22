@@ -19,9 +19,9 @@ class SearchPage extends StatelessWidget {
           children: <Widget>[
             Expanded(child: TextField(
               onSubmitted: (value) {
-                Navigator.of(context).pushNamed(Routes.SEARCHRESULTPAGE, arguments: {
-                  "keyword": value
-                });
+                // Navigator.of(context).pushNamed(Routes.SEARCHRESULTPAGE, arguments: {
+                //   "keyword": value
+                // });
               },
               autofocus: true,
               decoration: InputDecoration(),
@@ -37,6 +37,9 @@ class SearchPage extends StatelessWidget {
             )
           ],
         ),
+      ),
+      body: Center(
+        child: Text('搜索被cloudflare防护，503'),
       ),
     );
   }

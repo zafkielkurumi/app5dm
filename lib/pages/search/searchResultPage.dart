@@ -43,6 +43,8 @@ class SearchResultPage extends StatelessWidget {
                 ],
               ),
             ),
+            SliverGrid.count(crossAxisCount: 2, children: <Widget>[
+            ],)
           ],
         ),
       ),),

@@ -18,7 +18,7 @@ class HomeModel extends BaseProvider {
        setContent();
     } catch (e) {
       
-      onError();
+      onError(e);
       debugPrint(e.toString());
     }
 
