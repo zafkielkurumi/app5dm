@@ -40,6 +40,7 @@ class CustomThemeModel extends ChangeNotifier {
       brightness: brightness,
       accentColor: accentColor,
       primarySwatch: _themeColor,
+      primaryColor: _themeColor,
       splashColor: _themeColor.withAlpha(50),
       cursorColor: accentColor,
       textSelectionColor: accentColor.withAlpha(60),
@@ -50,6 +51,10 @@ class CustomThemeModel extends ChangeNotifier {
 
     _themeData = themeData.copyWith(
       appBarTheme: themeData.appBarTheme.copyWith(elevation: 0),
+      buttonTheme: themeData.buttonTheme.copyWith(
+        buttonColor: _themeColor,
+        textTheme: ButtonTextTheme.primary
+      ),
       //  scaffoldBackgroundColor: isDark ? themeData.scaffoldBackgroundColor : Colors.grey[200],
       textTheme: themeData.textTheme.copyWith(
           // 解决中文hint不居中的问题

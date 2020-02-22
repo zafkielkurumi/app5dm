@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:app5dm/pages/home/home.dart';
 import 'package:app5dm/pages/timetablePage.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
+import 'package:oktoast/oktoast.dart';
 
 
 @FFRoute(
@@ -26,12 +27,12 @@ class _IndexPageState extends State<IndexPage> {
   DateTime currentBackPressTime;
   int currentPageIndex = 0;
 
-  Future<bool> _onWillPop() {
+   Future<bool> _onWillPop() {
     DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime) > Duration(seconds: 2)) {
       currentBackPressTime = now;
-      // ToastHelper.toast('双击退出');
+      showToast('双击退出');
       return Future.value(false);
     }
     return Future.value(true);

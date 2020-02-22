@@ -5,7 +5,7 @@ import 'package:html/dom.dart';
 import 'package:app5dm/constants/config.dart';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_liquidcore/liquidcore.dart';
+// import 'package:flutter_liquidcore/liquidcore.dart';
 
 Future<String> transformIframe({String iframeUrl}) async {
   var res = await NetUtil.dio.get(iframeUrl);
@@ -99,12 +99,12 @@ tranferForbiden(String html) async {
   Document document = parse(html);
   Element script = document.querySelector('script');
   print(script.innerHtml.contains('challenge-form'));
-  JSContext _jsContext = new JSContext();
-  var a = await _jsContext.evaluateScript(
-      "eval('+((!+[]+!![]+!![]+!![]+!![]+!![]+!![]+!![]+[])+(!+[]+!![]+!![])+(!+[]+!![]+!![]+!![]+!![]+!![]+!![]+!![])+(+[])+(!+[]+!![]+!![]+!![])+(+!![])+(!+[]+!![]+!![]+!![]+!![]+!![])+(!+[]+!![]+!![]+!![])+(+!![]))/+((!+[]+!![]+!![]+!![]+!![]+!![]+!![]+[])+(!+[]+!![])+(!+[]+!![]+!![])+(+!![])+(+!![])+(!+[]+!![])+(!+[]+!![]+!![])+(!+[]+!![]+!![]+!![]+!![]+!![])+(!+[]+!![]+!![]+!![]+!![]+!![]+!![]+!![]))')");
-  if (_jsContext != null) {
-    _jsContext.cleanUp();
-  }
+  // JSContext _jsContext = new JSContext();
+  // var a = await _jsContext.evaluateScript(
+  //     "eval('+((!+[]+!![]+!![]+!![]+!![]+!![]+!![]+!![]+[])+(!+[]+!![]+!![])+(!+[]+!![]+!![]+!![]+!![]+!![]+!![]+!![])+(+[])+(!+[]+!![]+!![]+!![])+(+!![])+(!+[]+!![]+!![]+!![]+!![]+!![])+(!+[]+!![]+!![]+!![])+(+!![]))/+((!+[]+!![]+!![]+!![]+!![]+!![]+!![]+[])+(!+[]+!![])+(!+[]+!![]+!![])+(+!![])+(+!![])+(!+[]+!![])+(!+[]+!![]+!![])+(!+[]+!![]+!![]+!![]+!![]+!![])+(!+[]+!![]+!![]+!![]+!![]+!![]+!![]+!![]))')");
+  // if (_jsContext != null) {
+  //   _jsContext.cleanUp();
+  // }
   var base = 'www.5dm.com'; // len
 }
 

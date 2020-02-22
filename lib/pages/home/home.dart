@@ -21,6 +21,15 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            RaisedButton(onPressed: () {
+              Navigator.of(context).pushNamed(Routes.LOGINPAGE);
+            }, child: Text('登录测试'),)
+          ],
+        ),
+      ),
       body: ChangeNotifierProvider<HomeModel>(
         create: (_) => HomeModel(),
         child: ViewWidget<HomeModel>(

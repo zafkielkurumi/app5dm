@@ -63,7 +63,6 @@ class _TimetableState extends State<Timetable>
                   onRefresh: timelineModel.refresh,
                   child: NestedScrollView(
                     headerSliverBuilder: (c, b) {
-                      print(Theme.of(context).primaryTextTheme.display1.color);
                       return [
                         SliverAppBar(
                           pinned: false,
@@ -83,7 +82,13 @@ class _TimetableState extends State<Timetable>
                             labelColor: Theme.of(context).primaryColor,
                             unselectedLabelColor: Theme.of(context).primaryTextTheme.display1.color,
                             indicator: BoxDecoration(
-                              color: Theme.of(context).primaryTextTheme.display1.color,
+                              // color: ,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Theme.of(context).primaryTextTheme.display1.color,
+                                  spreadRadius: 3
+                                )
+                              ],
                               shape: BoxShape.circle,
                             ),
                             tabs: timelines.map((item) {
