@@ -1,4 +1,3 @@
-import 'package:app5dm/apis/userApi.dart';
 import 'package:app5dm/constants/images.dart';
 import 'package:app5dm/providers/baseProvider.dart';
 import 'package:app5dm/providers/userProvider.dart';
@@ -11,7 +10,6 @@ import 'package:provider/provider.dart';
 @FFRoute(
   name: "/loginPage",
   routeName: "loginPage",
-  showStatusBar: false,
 )
 class LoginPage extends StatelessWidget {
   final TextEditingController pwdController = TextEditingController();
@@ -30,6 +28,7 @@ class LoginPage extends StatelessWidget {
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
             },
+         
             child: Theme(
               data:
                   Theme.of(context).copyWith(splashFactory: NoSplashFactory()),
@@ -67,72 +66,16 @@ class LoginPage extends StatelessWidget {
                                 key: _formKey,
                                 child: Column(
                                   children: <Widget>[
-                                    TextFormField(
-                                      controller: userNameController,
-                                      decoration: InputDecoration(
-                                        hintText: '用户名',
-                                        prefixIcon: Icon(Icons.perm_identity),
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty &&
-                                            value.trim().isEmpty) {
-                                          return '请输入用户名';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                    TextFormField(
-                                      controller: pwdController,
-                                      decoration: InputDecoration(
-                                        hintText: '密码',
-                                        prefixIcon: Icon(Icons.lock_outline),
-                                      ),
-                                       validator: (value) {
-                                        if (value.isEmpty &&
-                                            value.trim().isEmpty) {
-                                          return '请输入密码';
-                                        }
-                                        return null;
-                                      },
-                                      obscureText: true,
-                                    ),
+                                    NameFormField(
+                                        userNameController: userNameController),
+                                    PwdFormField(pwdController: pwdController),
                                     SizedBox(
                                       height: Screen.setHeight(50),
                                     ),
-                                    SizedBox(
-                                        width: double.infinity,
-                                        child: Selector<UserModel, UserModel>(
-                                          selector: (_, userModel) => userModel,
-                                          shouldRebuild: (newModel, oldModel) =>
-                                              newModel.viewState !=
-                                              oldModel.viewState,
-                                          builder: (_, userModel, child) {
-                                            return RaisedButton(
-                                              onPressed: () async {
-                                                if (_formKey.currentState
-                                                        .validate() &&
-                                                    userModel.viewState !=
-                                                        ViewState.pending) {
-                                                  var res =
-                                                      await userModel.login(
-                                                          pwd: pwdController
-                                                              .value.text,
-                                                          userName:
-                                                              userNameController
-                                                                  .value.text);
-                                                  if (res == true) {
-                                                    Navigator.of(context)
-                                                        .pop(true);
-                                                  }
-                                                }
-                                              },
-                                              child: userModel.viewState ==
-                                                      ViewState.pending
-                                                  ? Text('登录中')
-                                                  : Text('登录'),
-                                            );
-                                          },
-                                        )),
+                                    LoginButton(
+                                        formKey: _formKey,
+                                        pwdController: pwdController,
+                                        userNameController: userNameController),
                                     SizedBox(
                                       height: 10,
                                     ),
@@ -155,5 +98,104 @@ class LoginPage extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+class LoginButton extends StatelessWidget {
+  const LoginButton({
+    Key key,
+    @required GlobalKey<FormState> formKey,
+    @required this.pwdController,
+    @required this.userNameController,
+  })  : _formKey = formKey,
+        super(key: key);
+
+  final GlobalKey<FormState> _formKey;
+  final TextEditingController pwdController;
+  final TextEditingController userNameController;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+        width: double.infinity,
+        child: Selector<UserModel, UserModel>(
+          selector: (_, userModel) => userModel,
+          shouldRebuild: (newModel, oldModel) => false,
+          builder: (_, userModel, child) {
+            return RaisedButton(
+              onPressed: () async {
+                if (_formKey.currentState.validate() &&
+                    userModel.viewState != ViewState.pending) {
+                  var res = await userModel.login(
+                      pwd: pwdController.value.text,
+                      userName: userNameController.value.text);
+                  if (res == true) {
+                    Navigator.of(context).pop(true);
+                  }
+                }
+              },
+              child: Selector<UserModel, ViewState>(
+                  builder: (_, viewState, child) {
+                    return viewState == ViewState.pending
+                        ? Text('登录中...', style: TextStyle(color: Colors.white),)
+                        : Text('登录', style: TextStyle(color: Colors.white),);
+                  },
+                  selector: (_, userModel) => userModel.viewState),
+            );
+          },
+        ));
+  }
+}
+
+class PwdFormField extends StatelessWidget {
+  const PwdFormField({
+    Key key,
+    @required this.pwdController,
+  }) : super(key: key);
+
+  final TextEditingController pwdController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: pwdController,
+      decoration: InputDecoration(
+        hintText: '密码',
+        prefixIcon: Icon(Icons.lock_outline),
+      ),
+      validator: (value) {
+        if (value.isEmpty && value.trim().isEmpty) {
+          return '请输入密码';
+        }
+        return null;
+      },
+      obscureText: true,
+    );
+  }
+}
+
+class NameFormField extends StatelessWidget {
+  const NameFormField({
+    Key key,
+    @required this.userNameController,
+  }) : super(key: key);
+
+  final TextEditingController userNameController;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: userNameController,
+      decoration: InputDecoration(
+        hintText: '用户名',
+        prefixIcon: Icon(Icons.perm_identity),
+      ),
+      validator: (value) {
+        if (value.isEmpty && value.trim().isEmpty) {
+          return '请输入用户名';
+        }
+        return null;
+      },
+    );
   }
 }

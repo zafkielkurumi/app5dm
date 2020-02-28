@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -9,6 +9,11 @@ enum ViewState {
   unAuth, // 未登录
   pending, // 请求中
   content,
+}
+
+getFunction(BuildContext context, T) {
+  // return Provider.of<T>(context);
+  // Consumer
 }
 
  class BaseProvider extends ChangeNotifier {

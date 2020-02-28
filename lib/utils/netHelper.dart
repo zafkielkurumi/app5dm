@@ -5,12 +5,21 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:oktoast/oktoast.dart';
 
+
+
+class Test {
+  final num a;
+  final num b;
+  Test({this.a: 1, this.b = 2});
+}
+
 class NetUtil {
   static final Dio dio = new Dio(BaseOptions(
     // baseUrl: "https://www.5dm.tv/",
-    connectTimeout: 10000,
-    receiveTimeout: 10000,
-    followRedirects: true
+    connectTimeout: 15000,
+    receiveTimeout: 15000,
+    headers: {
+     "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.116 Mobile Safari/537.36"}
   ));
   static CookieJar cookieJar = new CookieJar();
 
@@ -25,8 +34,12 @@ class NetUtil {
         debugPrint('net end');
         return response;
       }, onError: (DioError e) async {
-        if (e.response.statusCode == 503) {
+        // if (e i)
+        if (e.type  == DioErrorType.RESPONSE && e.response.statusCode == 503) {
           showToast('503');
+        }
+        if (e.type == DioErrorType.CONNECT_TIMEOUT || e.type == DioErrorType.RECEIVE_TIMEOUT) {
+          showToast('网络连接超时');
         }
         debugPrint("dioError: ${e.message}");
         return e;

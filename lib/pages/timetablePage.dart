@@ -47,20 +47,19 @@ class _TimetableState extends State<Timetable>
           skelelon: SkeletonList(
             listTitle: TimeTableSkeleton(),
           ),
-          child: Selector<TimelineModel, TimelineModel>(
-            selector: (_, timelineModel) => timelineModel,
-            shouldRebuild: (oldModel, newModel) =>
-                oldModel.timelines != newModel.timelines,
-            builder: (_, TimelineModel timelineModel, child) {
-              List<VideoItems> timelines = timelineModel.timelines;
+          child: Selector<TimelineModel, List<VideoItems>>(
+            selector: (_, timelineModel) => timelineModel.timelines,
+            builder: (ctx, timelines, child) {
               intTabController(timelines.length);
 
-              var pinnedHeaderHeight = kTextTabBarHeight + Screen.statusHeight;
+              // var pinnedHeaderHeight = kTextTabBarHeight + Screen.statusHeight;
+              var pinnedHeaderHeight = kTextTabBarHeight;
+              
               return Theme(
                 data: Theme.of(context)
                     .copyWith(splashFactory: NoSplashFactory()),
                 child: NestedScrollViewRefreshIndicator(
-                  onRefresh: timelineModel.refresh,
+                  onRefresh: Provider.of<TimelineModel>(ctx, listen: false).refresh,
                   child: NestedScrollView(
                     headerSliverBuilder: (c, b) {
                       return [
@@ -72,38 +71,7 @@ class _TimetableState extends State<Timetable>
                           title: Text('时间表'),
                           // flexibleSpace: FlexibleSpaceBar(),
                         ),
-                        SliverAppBar(
-                          pinned: true,
-                          floating: false,
-                          snap: false,
-                          title: TabBar(
-                            controller: _tabController,
-                            indicatorSize: TabBarIndicatorSize.label,
-                            labelColor: Theme.of(context).primaryColor,
-                            unselectedLabelColor: Theme.of(context).primaryTextTheme.display1.color,
-                            indicator: BoxDecoration(
-                              // color: ,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Theme.of(context).primaryTextTheme.display1.color,
-                                  spreadRadius: 3
-                                )
-                              ],
-                              shape: BoxShape.circle,
-                            ),
-                            tabs: timelines.map((item) {
-                              return Tab(
-                                child: SizedBox(
-                                  child: Center(
-                                    child: Text(
-                                      '${item.title.substring(1)}',
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          ),
-                        ),
+                        TabAppBar(tabController: _tabController, timelines: timelines),
                       ];
                     },
                     pinnedHeaderSliverHeightBuilder: () {
@@ -153,6 +121,52 @@ class _TimetableState extends State<Timetable>
             },
           ),
         ),
+      ),
+    );
+  }
+}
+
+class TabAppBar extends StatelessWidget {
+  const TabAppBar({
+    Key key,
+    @required TabController tabController,
+    @required this.timelines,
+  }) : _tabController = tabController, super(key: key);
+
+  final TabController _tabController;
+  final List<VideoItems> timelines;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      pinned: true,
+      floating: false,
+      snap: false,
+      title: TabBar(
+        controller: _tabController,
+        indicatorSize: TabBarIndicatorSize.label,
+        labelColor: Theme.of(context).primaryColor,
+        unselectedLabelColor: Theme.of(context).primaryTextTheme.display1.color,
+        indicator: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Theme.of(context).primaryTextTheme.display1.color,
+              spreadRadius: 3
+            )
+          ],
+          shape: BoxShape.circle,
+        ),
+        tabs: timelines.map((item) {
+          return Tab(
+            child: SizedBox(
+              child: Center(
+                child: Text(
+                  '${item.title.substring(1)}',
+                ),
+              ),
+            ),
+          );
+        }).toList(),
       ),
     );
   }

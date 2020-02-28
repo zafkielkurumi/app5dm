@@ -1,5 +1,6 @@
 import 'package:app5dm/app5dm_route.dart';
 import 'package:app5dm/models/index.dart';
+import 'package:app5dm/pages/home/drawer.dart';
 import 'package:app5dm/providers/homeProvider.dart';
 import 'package:app5dm/providers/themeProvider.dart';
 import 'package:app5dm/utils/index.dart';
@@ -20,61 +21,42 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
+    return SafeArea(
+        child: Scaffold(
       drawer: Drawer(
-        child: Column(
-          children: <Widget>[
-            RaisedButton(onPressed: () {
-              Navigator.of(context).pushNamed(Routes.LOGINPAGE);
-            }, child: Text('登录测试'),)
-          ],
-        ),
+        child: HomeDrawer(),
       ),
       body: ChangeNotifierProvider<HomeModel>(
         create: (_) => HomeModel(),
         child: ViewWidget<HomeModel>(
-          skelelon: SkeletonGirdList(
-          
-          ),
-          child: Selector<HomeModel, HomeModel>(
-            selector: (_, homeModel) => homeModel,
-            shouldRebuild: (prev, next) => prev.homelines != next.homelines,
+          skelelon: SkeletonGirdList(),
+          child: Selector<HomeModel, List<VideoItems>>(
+            selector: (_, homeModel) => homeModel.homelines,
             child: HomeAppBar(),
-            builder: (_, homeModel, child) {
-              var homelines = homeModel.homelines;
+            builder: (ctx, homelines, child) {
               return Theme(
                   data: Theme.of(context)
                       .copyWith(splashFactory: NoSplashFactory()),
                   child: RefreshIndicator(
-                    onRefresh: homeModel.refresh,
+                    onRefresh: Provider.of<HomeModel>(ctx, listen: false).refresh ,
                     child: CustomScrollView(
                       slivers: [
                         child,
                         ...List.generate(homelines.length, (index) {
+                          var videoItem = homelines[index];
                           if (index == 0) {
-                            return Selector<HomeModel, VideoItems>(
-                                builder: (_, videoItem, child) {
-                                  return HomeSwiper(videoItem: videoItem);
-                                },
-                                selector: (_, homeModel) =>
-                                    homeModel.homelines[index]);
+                            return HomeSwiper(videoItem: videoItem);
                           } else {
                             return SliverToBoxAdapter(
                               child: Padding(
                                 padding: EdgeInsets.only(left: 10, right: 10),
-                                child: Selector<HomeModel, VideoItems>(
-                                    builder: (_, videoItem, c) {
-                                      return Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          MoreTitle(videoItem: videoItem),
-                                          SeasonItems(videoItem: videoItem)
-                                        ],
-                                      );
-                                    },
-                                    selector: (_, homeModel) =>
-                                        homeModel.homelines[index]),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    MoreTitle(videoItem: videoItem),
+                                    SeasonItems(videoItem: videoItem)
+                                  ],
+                                ),
                               ),
                             );
                           }
@@ -86,7 +68,7 @@ class _HomePageState extends State<HomePage>
           ),
         ),
       ),
-    );
+    ));
   }
 }
 
@@ -149,7 +131,7 @@ class SeasonItems extends StatelessWidget {
             onTap: () {
               Navigator.of(context).pushNamed(
                 Routes.PLAYERPAGE,
-                arguments: {"link": season.stringId},
+                arguments: {"link": season.stringId, "picUrl": season.imgUrl},
               );
             },
             child: Container(
@@ -212,7 +194,8 @@ class HomeAppBar extends StatelessWidget {
       leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
-            Provider.of<CustomThemeModel>(context, listen: false).switchRandomTheme();
+            Provider.of<CustomThemeModel>(context, listen: false)
+                .switchRandomTheme();
           }),
       title: GestureDetector(
         onTap: () {

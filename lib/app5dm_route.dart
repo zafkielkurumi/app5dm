@@ -12,27 +12,32 @@ import 'pages/playerPage.dart';
 import 'pages/search/searchPage.dart';
 import 'pages/search/searchResultPage.dart';
 import 'pages/splashPage.dart';
+import 'pages/test/testPage.dart';
 
 RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
   switch (name) {
+    case "/TestPage":
+      return RouteResult(
+        widget: TestPage(),
+        showStatusBar: true,
+        routeName: "TestPage",
+      );
     case "/loginPage":
       return RouteResult(
         widget: LoginPage(),
-        showStatusBar: false,
         routeName: "loginPage",
       );
     case "/playerPage":
       return RouteResult(
         widget: PlayerPage(
           link: arguments['link'],
+          picUrl: arguments['picUrl'],
         ),
-        showStatusBar: false,
         routeName: "playerPage",
       );
     case "/searchPage":
       return RouteResult(
         widget: SearchPage(),
-        showStatusBar: false,
         routeName: "searchPage",
         pageRouteType: PageRouteType.transparent,
       );
@@ -41,7 +46,6 @@ RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
         widget: SearchResultPage(
           keyword: arguments['keyword'],
         ),
-        showStatusBar: false,
         routeName: "searchResultPage",
         pageRouteType: PageRouteType.transparent,
       );
@@ -51,13 +55,12 @@ RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
           link: arguments['link'],
           title: arguments['title'],
         ),
-        showStatusBar: false,
         routeName: "serialPage",
       );
     case "app5dm://homePage":
       return RouteResult(
         widget: IndexPage(),
-        showStatusBar: false,
+        showStatusBar: true,
         routeName: "homePage",
       );
     case "app5dm://splashPage":
@@ -102,26 +105,30 @@ enum PageRouteType { material, cupertino, transparent }
 class Routes {
   const Routes._();
 
+  /// TestPage
+  ///
+  /// [name] : /TestPage
+  /// [routeName] : TestPage
+  /// [showStatusBar] : true
+  static const String TESTPAGE = "/TestPage";
+
   /// loginPage
   ///
   /// [name] : /loginPage
   /// [routeName] : loginPage
-  /// [showStatusBar] : false
   static const String LOGINPAGE = "/loginPage";
 
   /// playerPage
   ///
   /// [name] : /playerPage
   /// [routeName] : playerPage
-  /// [arguments] : [link]
-  /// [showStatusBar] : false
+  /// [arguments] : [link, picUrl]
   static const String PLAYERPAGE = "/playerPage";
 
   /// searchPage
   ///
   /// [name] : /searchPage
   /// [routeName] : searchPage
-  /// [showStatusBar] : false
   /// [pageRouteType] : PageRouteType.transparent
   static const String SEARCHPAGE = "/searchPage";
 
@@ -130,7 +137,6 @@ class Routes {
   /// [name] : /searchResultPage
   /// [routeName] : searchResultPage
   /// [arguments] : [keyword]
-  /// [showStatusBar] : false
   /// [pageRouteType] : PageRouteType.transparent
   static const String SEARCHRESULTPAGE = "/searchResultPage";
 
@@ -139,14 +145,13 @@ class Routes {
   /// [name] : /serialPage
   /// [routeName] : serialPage
   /// [arguments] : [link, title]
-  /// [showStatusBar] : false
   static const String SERIALPAGE = "/serialPage";
 
   /// homePage
   ///
   /// [name] : app5dm://homePage
   /// [routeName] : homePage
-  /// [showStatusBar] : false
+  /// [showStatusBar] : true
   static const String APP5DM_HOMEPAGE = "app5dm://homePage";
 
   /// splashPage

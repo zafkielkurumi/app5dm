@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
   name: "/serialPage",
   routeName: "serialPage",
   argumentNames: ["link", "title"],
-  showStatusBar: false,
 )
 class SerialPage extends StatelessWidget {
   final String link;
@@ -38,10 +37,8 @@ class SerialPage extends StatelessWidget {
                       crossAxisSpacing: Screen.setWidth(20),
                       mainAxisSpacing: 0),
                   itemBuilder: (_, index) {
-                    return Selector<SerialModel, Seasons>(
-                      selector: (_, serialModel) => serialModel.serials[index],
-                      builder: (_, serial, child) {
-                        return GestureDetector(
+                    var serial = serials[index];
+                    return GestureDetector(
                           onTap: () {
                             Navigator.of(context).pushNamed(
                               Routes.PLAYERPAGE,
@@ -55,8 +52,6 @@ class SerialPage extends StatelessWidget {
                             ),
                           ),
                         );
-                      },
-                    );
                   },
                 );
               },

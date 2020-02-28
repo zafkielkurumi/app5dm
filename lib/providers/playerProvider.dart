@@ -1,17 +1,44 @@
 import 'package:app5dm/models/index.dart';
 import 'package:app5dm/providers/baseProvider.dart';
 import 'package:app5dm/apis/index.dart';
+import 'package:app5dm/utils/index.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 
 class PlayerModel extends BaseProvider {
-  PlayerModel(String link) {
+  PlayerModel({@required String link, String noSourcePic}) {
+    _noSourcePic = noSourcePic;
     getData(link);
   }
   String _videoSrc = '';
+  String get videoSrc => _videoSrc;
+
+  String _noSourcePic = '';
+  String get noSourcePic => _noSourcePic;
+
   String _videoTitle = '';
+  String get videoTitle => _videoTitle;
+
   List<Sources> _sources = [];
+  List<Sources> get sources => _sources;
+
   String _link = '';
+  String get link => _link;
+
   IjkMediaController _controller = IjkMediaController();
+  IjkMediaController get controller => _controller;
+
+  ScrollController _scrollController = ScrollController();
+  ScrollController get scrollController => _scrollController;
+
+  // num _height = Screen.setHeight(450);
+  double _pinHeight = Screen.setHeight(450);
+  double get pinHeight => _pinHeight;
+
+  
+
+  bool _isShowTitle = false;
+  bool get isShowTitle => _isShowTitle;
 
   Future getData(String link) async {
     _link = link;
@@ -31,21 +58,65 @@ class PlayerModel extends BaseProvider {
     }
   }
 
+  changePlayPinHeight() {
+    _pinHeight =  Screen.setHeight(450);
+    // scrollController.jumpTo(Screen.setHeight(450));
+     scrollController.position.applyContentDimensions(scrollController.position.minScrollExtent,
+              scrollController.position.maxScrollExtent + _pinHeight);
+  }
+
+  changePausePinHeight() {
+     _pinHeight =  kToolbarHeight;
+          scrollController.position.applyContentDimensions(scrollController.position.minScrollExtent,
+              scrollController.position.maxScrollExtent + _pinHeight);
+  }
+
+
+  offsetListener() {
+
+    if (scrollController.offset > Screen.setHeight(300) && !_isShowTitle) {
+       _isShowTitle = true;
+        setContent();
+    }  else if(scrollController.offset < Screen.setHeight(300) && _isShowTitle) {
+       _isShowTitle = false;
+        setContent();
+    }
+
+    // if (scrollController.offset > Screen.setHeight(300)) {
+    //   if (_isShowTitle == false) {
+    //     print('_isShowTitle');
+    //     print(_isShowTitle);
+       
+    //   }
+    // } else {
+    //   if (_isShowTitle == true) {
+    //     print('_isShowTitle');
+    //     print(_isShowTitle);
+    //     _isShowTitle = false;
+    //     setContent();
+    //   }
+    // }
+    //  notifyListeners();
+  }
+
+  initScroll() {
+    scrollController.addListener(offsetListener);
+  }
+
+  removeLis() {
+    scrollController.removeListener(offsetListener);
+  }
+
   @override
   retry() {
     setFirst();
     getData(link);
   }
 
-  String get videoSrc => _videoSrc;
-  String get videoTitle => _videoTitle;
-  List<Sources> get sources => _sources;
-  String get link => _link;
-  IjkMediaController get controller => _controller;
-
   @override
   void dispose() {
     controller?.dispose();
+    scrollController?.dispose();
     super.dispose();
   }
 }

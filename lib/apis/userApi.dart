@@ -12,10 +12,7 @@ class UserApi {
       "testcookie": 1,
       "redirect_to": "https://www.5dm.tv/wp-admin/"
     };
-    print(params);
     var res = await NetUtil.dio.request(Api.login, options: Options(method: 'post', followRedirects: true), data: FormData.fromMap(params));
-    print(res.toString());
-    print('res.toString()');
     return checkIsLogin(res.toString());
   }
 

@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
     name: "/searchResultPage",
     routeName: "searchResultPage",
     argumentNames: ["keyword"],
-    showStatusBar: false,
     pageRouteType: PageRouteType.transparent)
 class SearchResultPage extends StatelessWidget {
   final String keyword;

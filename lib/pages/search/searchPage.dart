@@ -6,7 +6,6 @@ import 'package:ff_annotation_route/ff_annotation_route.dart';
 @FFRoute(
   name: "/searchPage",
   routeName: "searchPage",
-  showStatusBar: false,
   pageRouteType: PageRouteType.transparent
 )
 

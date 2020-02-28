@@ -8,7 +8,7 @@ import 'package:oktoast/oktoast.dart';
 @FFRoute(
   name: "app5dm://homePage",
   routeName: "homePage",
-  showStatusBar: false,
+  showStatusBar: true
 )
 
 class IndexPage extends StatefulWidget {

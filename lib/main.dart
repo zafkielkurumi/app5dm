@@ -12,12 +12,12 @@ import 'package:provider/provider.dart';
 void main() async {
   NetUtil.init();
   runApp(MyApp());
-      SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarBrightness: Brightness.light,
-      ),
-    );
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarBrightness: Brightness.light,
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -31,46 +31,53 @@ class _MyAppState extends State<MyApp> {
     return OKToast(
         child: MultiProvider(
       providers: [
-        ChangeNotifierProvider<CustomThemeModel>(create: (_) => CustomThemeModel())
+        ChangeNotifierProvider<CustomThemeModel>(
+            create: (_) => CustomThemeModel())
       ],
       child: Consumer<CustomThemeModel>(builder: (_, themeModel, child) {
         return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: '5dm',
-        theme: themeModel.themeData,
-        navigatorObservers: [
-          FFNavigatorObserver(routeChange:
-              (RouteSettings newRouteSettings, RouteSettings oldRouteSettings) {
-            // track page here
-            if (newRouteSettings is FFRouteSettings &&
-                oldRouteSettings is FFRouteSettings) {
-              if (newRouteSettings?.showStatusBar !=
-                  oldRouteSettings?.showStatusBar) {
-                if (newRouteSettings?.showStatusBar == true) {
-                  SystemChrome.setEnabledSystemUIOverlays(
-                      SystemUiOverlay.values);
-                  SystemChrome.setSystemUIOverlayStyle(
-                      SystemUiOverlayStyle.dark);
-                } else {
-                  SystemChrome.setEnabledSystemUIOverlays([]);
+          debugShowCheckedModeBanner: false,
+          title: '5dm',
+          theme: themeModel.themeData,
+          navigatorObservers: [
+            FFNavigatorObserver(routeChange: (RouteSettings newRouteSettings,
+                RouteSettings oldRouteSettings) {
+              // track page here
+              if (newRouteSettings is FFRouteSettings &&
+                  oldRouteSettings is FFRouteSettings) {
+                if (newRouteSettings?.showStatusBar !=
+                    oldRouteSettings?.showStatusBar) {
+                  if (newRouteSettings?.showStatusBar == true) {
+                    SystemChrome.setEnabledSystemUIOverlays(
+                        SystemUiOverlay.values);
+                    SystemChrome.setSystemUIOverlayStyle(
+                        SystemUiOverlayStyle.dark);
+                  } else {
+                    SystemChrome.setEnabledSystemUIOverlays([]);
+                  }
                 }
               }
-            }
-          })
-        ],
-        builder: (c, w) {
-          ScreenUtil.init(c, width: 750, height: 1334);
-          var data = MediaQuery.of(c);
-          return MediaQuery(
-            data: data.copyWith(textScaleFactor: 1.0),
-            child: w,
-          );
-        },
-        // home: IndexPage(),
-        initialRoute: Routes.APP5DM_SPLASHPAGE,
-        onGenerateRoute: (RouteSettings settings) =>
-            onGenerateRouteHelper(settings, notFoundFallback: NoRoute()),
-      );
+            })
+          ],
+          builder: (c, w) {
+            ScreenUtil.init(c, width: 750, height: 1334);
+            MediaQueryData data = MediaQuery.of(c);
+            return MediaQuery(
+              data: data.copyWith(textScaleFactor: 1.0),
+              // 响应 theme变换statusbar
+              child: AnnotatedRegion<SystemUiOverlayStyle>(
+                  value: SystemUiOverlayStyle(
+                    statusBarColor: themeModel.themeColor,
+                    statusBarBrightness: themeModel.brightness,
+                  ),
+                  child: SafeArea(child: w)),
+            );
+          },
+          // home: IndexPage(),
+          initialRoute: Routes.APP5DM_SPLASHPAGE,
+          onGenerateRoute: (RouteSettings settings) =>
+              onGenerateRouteHelper(settings, notFoundFallback: NoRoute()),
+        );
       }),
     ));
   }

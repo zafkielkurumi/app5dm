@@ -1,4 +1,4 @@
-export './DIJKControllerWidget.dart';
+export './playerUi/player.dart';
 export './loading.dart';
 export './skeletons.dart';
 export './baseSkeleton.dart';
@@ -8,3 +8,5 @@ export './noSplash.dart';
 export './videoItemIntro.dart';
 export './dialog.dart';
 export './clipers.dart';
+export './sliverPersistentHeader.dart';
+export './innerShadow.dart';

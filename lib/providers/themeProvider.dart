@@ -11,31 +11,36 @@ class CustomThemeModel extends ChangeNotifier {
   bool _userDarkMode = false;
   get userDarkMode => _userDarkMode;
   MaterialColor _themeColor = Colors.indigo;
+  MaterialColor get  themeColor => _themeColor;
 
   ThemeData _themeData;
   get themeData => _themeData;
 
+  Brightness _brightness = Brightness.light;
+  Brightness get brightness => _brightness;
+
   switchTheme({bool userDarkMode, Color color}) {
     _themeColor = color;
-    // _userDarkMode = userDarkMode;
+    //  SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle(
+    //     statusBarColor: _themeColor,
+    //     statusBarBrightness: Brightness.light,
+    //   ),
+    // );
+    print('object');
     changethemeData();
     notifyListeners();
   }
 
   setDarkMode(bool value) {
     _userDarkMode = value;
-     SystemUiOverlayStyle(
-        statusBarBrightness: Brightness.light,
-      );
     switchTheme();
   }
 
   changethemeData() {
     bool isDark = _userDarkMode;
-    Brightness brightness = isDark ? Brightness.dark : Brightness.light;
+    _brightness = isDark ? Brightness.dark : Brightness.light;
     var accentColor = isDark ? _themeColor[700] : _themeColor;
-    print(brightness);
-    print('brightness');
     ThemeData themeData = ThemeData(
       brightness: brightness,
       accentColor: accentColor,
