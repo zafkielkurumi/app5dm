@@ -4,14 +4,13 @@ import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/playerUi/CustomProgressBar.dart';
 import 'package:app5dm/widgets/playerUi/fullScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 
-class PortraitController extends StatelessWidget {
+class FullController extends StatelessWidget {
   final IjkMediaController controller;
   final VideoInfo info;
   final bool playWillPauseOther;
-  PortraitController(
+  FullController(
       {Key key,
       @required this.controller,
       @required this.info,
@@ -25,20 +24,20 @@ class PortraitController extends StatelessWidget {
     }
     return Column(
       children: <Widget>[
-        PortaitHeader(),
+        FullHeader(),
         Expanded(
           child: Container(
               // child: ProgressBar(),
               ),
         ),
-        PortaitFooter(controller: controller, info: info)
+        FullFooter(controller: controller, info: info)
       ],
     );
   }
 }
 
-class PortaitFooter extends StatelessWidget {
-  const PortaitFooter(
+class FullFooter extends StatelessWidget {
+  const FullFooter(
       {Key key,
       @required this.controller,
       @required this.info,
@@ -97,37 +96,34 @@ class PortaitFooter extends StatelessWidget {
             child: Container(
               height: 22,
               child: CustomProgressBar(
-                  max: info.duration,
-                  current: info.currentPosition,
-                  playedColor: Theme.of(context).primaryColor,
-                  changeProgressHandler: (progress) async {
-                    await controller.seekToProgress(progress);
-                  },
-                  tapProgressHandler: (progress) {}),
+              max: info.duration,
+              current: info.currentPosition,
+              playedColor: Theme.of(context).primaryColor,
+              changeProgressHandler: (progress) async {
+                  await controller.seekToProgress(progress);
+              },
+              tapProgressHandler: (progress) {
+                
+              }
+            ),
             ),
           ),
           buildCurrentTime(),
-          haveTime
-              ? Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 2),
-                  child: Text(
-                    '/',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                )
-              : SizedBox.shrink(),
+          haveTime ? Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2),
+            child: Text(
+              '/',
+              style: TextStyle(color: Colors.white),
+            ),
+          ) :SizedBox.shrink(),
           buildMaxTime(),
           IconButton(
               icon: Icon(
-                Icons.fullscreen,
+                Icons.fullscreen_exit,
                 color: Colors.white,
               ),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => PlayerFullScreen(controller))).then((r) {
-                      SystemChrome.setEnabledSystemUIOverlays(
-                        SystemUiOverlay.values);
-                    });
+                Navigator.of(context).pop();
               })
         ],
       ),
@@ -135,7 +131,7 @@ class PortaitFooter extends StatelessWidget {
   }
 }
 
-class PortaitHeader extends StatelessWidget {
+class FullHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

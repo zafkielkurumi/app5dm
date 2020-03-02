@@ -49,24 +49,16 @@ class _PlayerPageState extends State<PlayerPage>
                     return [
                       // TODO pinnedHeaderSliverHeightBuilder rebuild不会执行问题，待解决
                       child
-                      // SliverPersistentHeader(
-                      //   delegate: CustomSliverPersistentHeader(
-                      //       minHeigth: pinHeight,
-                      //       maxHeight: Screen.setHeight(450),
-                      //       child: Container(
-                      //         color: Colors.red,
-                      //       )),
-                      // )
                     ];
                   },
                   pinnedHeaderSliverHeightBuilder: () {
-                    return kToolbarHeight;
+                    return model.pinHeight;
                   },
                   body: ViewWidget<PlayerModel>(
                     child: Column(
                       children: <Widget>[
-                        RaisedButton(onPressed: model.changePausePinHeight, child: Text('chang56'),),
-                        RaisedButton(onPressed: model.changePlayPinHeight, child: Text('chang246'),),
+                        // RaisedButton(onPressed: model.changePausePinHeight, child: Text('chang56'),),
+                        // RaisedButton(onPressed: model.changePlayPinHeight, child: Text('chang246'),),
                         Expanded(
                           child: Selector<PlayerModel, PlayerModel>(
                               selector: (_, playerModel) => playerModel,

@@ -25,8 +25,8 @@ class PlayerModel extends BaseProvider {
   String _link = '';
   String get link => _link;
 
-  IjkMediaController _controller = IjkMediaController();
-  IjkMediaController get controller => _controller;
+  IjkMediaController _playerController = IjkMediaController();
+  IjkMediaController get playerController => _playerController;
 
   ScrollController _scrollController = ScrollController();
   ScrollController get scrollController => _scrollController;
@@ -34,8 +34,6 @@ class PlayerModel extends BaseProvider {
   // num _height = Screen.setHeight(450);
   double _pinHeight = Screen.setHeight(450);
   double get pinHeight => _pinHeight;
-
-  
 
   bool _isShowTitle = false;
   bool get isShowTitle => _isShowTitle;
@@ -48,7 +46,7 @@ class PlayerModel extends BaseProvider {
         _videoSrc = videoDetail.videoSrc;
         _videoTitle = videoDetail.videoTitle;
         _sources = videoDetail.sources;
-        controller.setNetworkDataSource(_videoSrc);
+        playerController.setNetworkDataSource(_videoSrc);
         setContent();
       } else {
         setUnAuth();
@@ -58,35 +56,42 @@ class PlayerModel extends BaseProvider {
     }
   }
 
+  // void setOptions() {
+  //   // var options = IjkOption(IjkOptionCategory., "skip_loop_filter", 48);
+  //   playerController.setIjkPlayerOptions(
+  //     [TargetPlatform.iOS, TargetPlatform.android],
+  //   );
+  // }
+
   changePlayPinHeight() {
-    _pinHeight =  Screen.setHeight(450);
-    // scrollController.jumpTo(Screen.setHeight(450));
-     scrollController.position.applyContentDimensions(scrollController.position.minScrollExtent,
-              scrollController.position.maxScrollExtent + _pinHeight);
+    _pinHeight = Screen.setHeight(450);
+    scrollController.position.applyContentDimensions(
+        scrollController.position.minScrollExtent,
+        scrollController.position.maxScrollExtent + _pinHeight);
   }
 
   changePausePinHeight() {
-     _pinHeight =  kToolbarHeight;
-          scrollController.position.applyContentDimensions(scrollController.position.minScrollExtent,
-              scrollController.position.maxScrollExtent + _pinHeight);
+    _pinHeight = kToolbarHeight;
+    scrollController.position.applyContentDimensions(
+        scrollController.position.minScrollExtent,
+        scrollController.position.maxScrollExtent + _pinHeight);
   }
 
-
   offsetListener() {
-
     if (scrollController.offset > Screen.setHeight(300) && !_isShowTitle) {
-       _isShowTitle = true;
-        setContent();
-    }  else if(scrollController.offset < Screen.setHeight(300) && _isShowTitle) {
-       _isShowTitle = false;
-        setContent();
+      _isShowTitle = true;
+      setContent();
+    } else if (scrollController.offset < Screen.setHeight(300) &&
+        _isShowTitle) {
+      _isShowTitle = false;
+      setContent();
     }
 
     // if (scrollController.offset > Screen.setHeight(300)) {
     //   if (_isShowTitle == false) {
     //     print('_isShowTitle');
     //     print(_isShowTitle);
-       
+
     //   }
     // } else {
     //   if (_isShowTitle == true) {

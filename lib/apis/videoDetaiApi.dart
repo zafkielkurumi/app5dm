@@ -16,6 +16,6 @@ class VideoDetailApi {
 
 bool checkIsLogin(String html) {
   // Document document = parse(html);
-  return html.contains('前往登陆');
+  return html.contains('404!');
 }
 

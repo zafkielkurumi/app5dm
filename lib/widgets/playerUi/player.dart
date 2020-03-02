@@ -6,9 +6,11 @@ import './DefaultIJKWidget.dart';
 class Player extends StatelessWidget {
   final IjkMediaController controller;
   final String noSourcePic;
+  final bool fullScreen;
   const Player({
     Key key,
     @required this.controller,
+    this.fullScreen = false,
     this.noSourcePic,
   }) : super(key: key);
 
@@ -41,6 +43,7 @@ class Player extends StatelessWidget {
       controllerWidgetBuilder: (mediaController) {
         return DefaultIJKWidget(
           controller: mediaController,
+          fullScreen: fullScreen,
         ); // 自定义
       },
     );

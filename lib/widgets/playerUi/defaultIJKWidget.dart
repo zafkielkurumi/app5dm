@@ -1,20 +1,21 @@
 import 'dart:async';
-import 'dart:io';
-import 'package:app5dm/utils/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 
 import 'package:flutter/cupertino.dart';
 
+import 'fullController.dart';
 import 'portraitView.dart';
 
 class DefaultIJKWidget extends StatefulWidget {
   final IjkMediaController controller;
   final bool doubleTapPlay;
   final bool playWillPauseOther;
+  final bool fullScreen;
   DefaultIJKWidget(
       {@required this.controller,
       this.doubleTapPlay: true,
+      this.fullScreen = false,
       this.playWillPauseOther = true});
   @override
   _DefaultIJKWidgetState createState() => _DefaultIJKWidgetState();
@@ -49,14 +50,14 @@ class _DefaultIJKWidgetState extends State<DefaultIJKWidget> {
   }
 
   onTap() {
-    // isShowTimer?.cancel();
-    // if (isShow == false) {
-    //   isShowTimer = Timer(Duration(seconds: 2), () {
-    //     isShow = false;
-    //     isShowTimer = null;
-    //   });
-    // }
-    // isShow = !isShow;
+    isShowTimer?.cancel();
+    if (isShow == false) {
+      isShowTimer = Timer(Duration(seconds: 2), () {
+        isShow = false;
+        isShowTimer = null;
+      });
+    }
+    isShow = !isShow;
   }
 
   void startTimer() {
@@ -85,7 +86,7 @@ class _DefaultIJKWidgetState extends State<DefaultIJKWidget> {
         if (info == null || !info.hasData) {
           return Container();
         }
-        return PortraitController(
+        return widget.fullScreen ? FullController(controller: controller, info: info,) : PortraitController(
           controller: controller,
           info: info,
         );
