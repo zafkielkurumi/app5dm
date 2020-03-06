@@ -105,7 +105,7 @@ class PlayerHeader extends StatelessWidget {
               child: Container(
                 height: Screen.setHeight(450),
                 child: Player(
-                  controller: model.controller,
+                  controller: model.playerController,
                   noSourcePic: model.noSourcePic,
                 ),
               ),

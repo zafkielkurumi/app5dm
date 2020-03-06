@@ -6,13 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:oktoast/oktoast.dart';
 
 
-
-class Test {
-  final num a;
-  final num b;
-  Test({this.a: 1, this.b = 2});
-}
-
 class NetUtil {
   static final Dio dio = new Dio(BaseOptions(
     // baseUrl: "https://www.5dm.tv/",

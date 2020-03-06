@@ -120,7 +120,7 @@ class PlayerModel extends BaseProvider {
 
   @override
   void dispose() {
-    controller?.dispose();
+    playerController?.dispose();
     scrollController?.dispose();
     super.dispose();
   }
