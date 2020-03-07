@@ -2,7 +2,9 @@
 
 使用flutter将5dm转为app
 
-
-
-- listview shrinkwrap 为true高度由自己决定， 否则由parent决定。默认为false
-- 打包闪退，因为压缩混淆问题，暂时关闭
+<br/>
+    <img width="280" src="screenshots/1.png"/>
+    <img width="280" src="screenshots/2.png"/>
+    <img width="280" src="screenshots/3.png"/>
+    <img width="280" src="screenshots/4.png"/>
+    <img width="280" src="screenshots/5.png"/>

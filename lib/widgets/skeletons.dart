@@ -3,6 +3,7 @@ import 'package:app5dm/utils/index.dart';
 
 import 'baseSkeleton.dart';
 class TimeTableSkeleton extends StatelessWidget {
+  
   @override
   Widget build(BuildContext context) {
     return Padding(
