@@ -2,14 +2,16 @@ import 'dart:convert' show json;
 import './protect.dart';
 
 class VideoDetail {
-  List<Sources> sources;
-  String videoSrc;
   String videoTitle;
+  String brief;
+  String videoSrc;
+  List<Sources> sources;
 
   VideoDetail({
-    this.sources,
-    this.videoSrc,
     this.videoTitle,
+    this.brief,
+    this.videoSrc,
+    this.sources,
   });
 
   factory VideoDetail.fromJson(jsonRes) {
@@ -26,18 +28,21 @@ class VideoDetail {
       }
     }
     return VideoDetail(
-      sources: sources,
-      videoSrc: convertValueByType(jsonRes['videoSrc'], String,
-          stack: "VideoDetail-videoSrc"),
       videoTitle: convertValueByType(jsonRes['videoTitle'], String,
           stack: "VideoDetail-videoTitle"),
+      brief: convertValueByType(jsonRes['brief'], String,
+          stack: "VideoDetail-brief"),
+      videoSrc: convertValueByType(jsonRes['videoSrc'], String,
+          stack: "VideoDetail-videoSrc"),
+      sources: sources,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'sources': sources,
-        'videoSrc': videoSrc,
         'videoTitle': videoTitle,
+        'brief': brief,
+        'videoSrc': videoSrc,
+        'sources': sources,
       };
   @override
   String toString() {
@@ -46,12 +51,12 @@ class VideoDetail {
 }
 
 class Sources {
-  List<Links> links;
   String sourceTitle;
+  List<Links> links;
 
   Sources({
-    this.links,
     this.sourceTitle,
+    this.links,
   });
 
   factory Sources.fromJson(jsonRes) {
@@ -68,15 +73,15 @@ class Sources {
       }
     }
     return Sources(
-      links: links,
       sourceTitle: convertValueByType(jsonRes['sourceTitle'], String,
           stack: "Sources-sourceTitle"),
+      links: links,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'links': links,
         'sourceTitle': sourceTitle,
+        'links': links,
       };
   @override
   String toString() {
@@ -85,26 +90,26 @@ class Sources {
 }
 
 class Links {
-  String link;
   String title;
+  String link;
 
   Links({
-    this.link,
     this.title,
+    this.link,
   });
 
   factory Links.fromJson(jsonRes) => jsonRes == null
       ? null
       : Links(
-          link:
-              convertValueByType(jsonRes['link'], String, stack: "Links-link"),
           title: convertValueByType(jsonRes['title'], String,
               stack: "Links-title"),
+          link:
+              convertValueByType(jsonRes['link'], String, stack: "Links-link"),
         );
 
   Map<String, dynamic> toJson() => {
-        'link': link,
         'title': title,
+        'link': link,
       };
   @override
   String toString() {
@@ -114,6 +119,7 @@ class Links {
 
 // {
 //  "videoTitle": "33",
+// "brief":"55",
 // "videoSrc": "fff",
 // "sources":[
 //  {

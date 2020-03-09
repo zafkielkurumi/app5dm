@@ -20,16 +20,14 @@ class PortraitController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!info.hasData) {
+    if (!info.hasData || info.duration <= 0) {
       return Container();
     }
     return Column(
       children: <Widget>[
         PortaitHeader(),
         Expanded(
-          child: Container(
-              // child: ProgressBar(),
-              ),
+          child: Container(),
         ),
         PortaitFooter(controller: controller, info: info)
       ],
@@ -52,23 +50,6 @@ class PortaitFooter extends StatelessWidget {
     return info.hasData && info.duration > 0;
   }
 
-  Widget buildCurrentTime() {
-    return haveTime
-        ? Text(
-            TimeHelper.getTimeText(info.currentPosition),
-            style: TextStyle(color: Colors.white),
-          )
-        : Container();
-  }
-
-  Widget buildMaxTime() {
-    return haveTime
-        ? Text(
-            TimeHelper.getTimeText(info.duration),
-            style: TextStyle(color: Colors.white),
-          )
-        : Container();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +87,10 @@ class PortaitFooter extends StatelessWidget {
                   tapProgressHandler: (progress) {}),
             ),
           ),
-          buildCurrentTime(),
+          Text(
+            TimeHelper.getTimeText(info.currentPosition),
+            style: TextStyle(color: Colors.white),
+          ),
           haveTime
               ? Padding(
                   padding: EdgeInsets.symmetric(horizontal: 2),
@@ -116,7 +100,10 @@ class PortaitFooter extends StatelessWidget {
                   ),
                 )
               : SizedBox.shrink(),
-          buildMaxTime(),
+          Text(
+            TimeHelper.getTimeText(info.duration),
+            style: TextStyle(color: Colors.white),
+          ),
           IconButton(
               icon: Icon(
                 Icons.fullscreen,

@@ -10,17 +10,14 @@ class PlayerModel extends BaseProvider {
     _noSourcePic = noSourcePic;
     getData(link);
   }
-  String _videoSrc = '';
-  String get videoSrc => _videoSrc;
+
+  VideoDetail _videoDetail;
+  VideoDetail get videoDetail => _videoDetail;
 
   String _noSourcePic = '';
   String get noSourcePic => _noSourcePic;
 
-  String _videoTitle = '';
-  String get videoTitle => _videoTitle;
 
-  List<Sources> _sources = [];
-  List<Sources> get sources => _sources;
 
   String _link = '';
   String get link => _link;
@@ -41,12 +38,10 @@ class PlayerModel extends BaseProvider {
   Future getData(String link) async {
     _link = link;
     try {
-      var videoDetail = await VideoDetailApi.getVideoDetail(link);
-      if (videoDetail != null) {
-        _videoSrc = videoDetail.videoSrc;
-        _videoTitle = videoDetail.videoTitle;
-        _sources = videoDetail.sources;
-        playerController.setNetworkDataSource(_videoSrc);
+      VideoDetail detail = await VideoDetailApi.getVideoDetail(link);
+      if (detail != null) {
+        _videoDetail = detail;
+        playerController.setNetworkDataSource(detail.videoSrc);
         setContent();
       } else {
         setUnAuth();
@@ -54,6 +49,11 @@ class PlayerModel extends BaseProvider {
     } catch (e) {
       onError(e);
     }
+  }
+
+  void changeLink(String link) {
+     setPending();
+     getData(link);
   }
 
   // void setOptions() {
@@ -86,22 +86,6 @@ class PlayerModel extends BaseProvider {
       _isShowTitle = false;
       setContent();
     }
-
-    // if (scrollController.offset > Screen.setHeight(300)) {
-    //   if (_isShowTitle == false) {
-    //     print('_isShowTitle');
-    //     print(_isShowTitle);
-
-    //   }
-    // } else {
-    //   if (_isShowTitle == true) {
-    //     print('_isShowTitle');
-    //     print(_isShowTitle);
-    //     _isShowTitle = false;
-    //     setContent();
-    //   }
-    // }
-    //  notifyListeners();
   }
 
   initScroll() {

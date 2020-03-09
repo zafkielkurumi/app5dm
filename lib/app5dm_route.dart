@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'pages/home/serialPage.dart';
 import 'pages/indexPage.dart';
 import 'pages/loginPage.dart';
-import 'pages/playerPage.dart';
+import 'pages/player/playerPage.dart';
 import 'pages/search/searchPage.dart';
 import 'pages/search/searchResultPage.dart';
 import 'pages/splashPage.dart';

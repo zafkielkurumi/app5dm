@@ -15,7 +15,8 @@ class ViewWidget<T extends BaseProvider> extends StatelessWidget {
     return Selector<T, ViewState>(
       builder: (c, viewstate, child) {
         switch (viewstate) {
-          case ViewState.content: return child;
+          case ViewState.content:
+          case ViewState.pending: return child;
           case ViewState.error: return ErrorView<T>();
           case ViewState.unAuth: return UnAuthView<T>();
           case ViewState.first:

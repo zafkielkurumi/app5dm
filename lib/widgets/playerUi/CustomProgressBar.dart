@@ -15,7 +15,6 @@ class CustomProgressBar extends StatefulWidget {
   final ChangeProgressHandler changeProgressHandler;
   final TapProgressHandler tapProgressHandler;
 
-
   CustomProgressBar({
     Key key,
     @required this.max,
@@ -62,49 +61,11 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
     );
   }
 
-  buildeLeft(Color color, double flex) {
-    if (flex == double.infinity ||
-        flex == double.nan ||
-        flex == double.negativeInfinity) {
-      flex = 0;
-    }
-    if (flex == 0) {
-      return Container();
-    }
-    return Expanded(
-      flex: (flex * 1000).toInt(),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-              child: Container(
-            color: color,
-          )),
-          Container(
-            width: 0.1,
-            height: 0.1,
-            child: OverflowBox(
-              maxWidth: 20,
-              maxHeight: 20,
-              alignment: Alignment.centerRight,
-              child: Container(
-                width: 10,
-                height: 10,
-                child: Image.asset(Images.logo),
-                decoration: BoxDecoration(shape: BoxShape.circle),
-              ),
-            ),
-          )
-        ],
-      ),
-      
-    );
-  }
-
   double getProgress(Offset localPositon) {
-    // var 
+    // var
     RenderBox renderBox = _progressKey.currentContext?.findRenderObject();
     var size = renderBox.size;
-    var progress  = localPositon.dx  / size.width;
+    var progress = localPositon.dx / size.width;
     if (progress > 1) {
       progress = 1;
     } else if (progress < 0) {
@@ -113,10 +74,10 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
     return progress;
   }
 
- void _onTapDown(TapDownDetails details) {
-   print(details.localPosition);
-   print(details.globalPosition);
-    var progress  =  getProgress(details.localPosition);
+  void _onTapDown(TapDownDetails details) {
+    print(details.localPosition);
+    print(details.globalPosition);
+    var progress = getProgress(details.localPosition);
     // widget.tapProgressHandler(progress);
     // todo showtip
   }
@@ -126,7 +87,7 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
     widget.changeProgressHandler(progress);
   }
 
-   void _onHorizontalDragUpdate(DragUpdateDetails details) {
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
     var progress = getProgress(details.localPosition);
     setState(() {
       tempLeft = progress;
@@ -134,18 +95,18 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
     widget.tapProgressHandler(progress);
   }
 
-   void _onHorizontalDragEnd(DragEndDetails details) {
-     if (tempLeft != null)  {
-       widget.changeProgressHandler(tempLeft);
-      tempLeft = null; 
-     }
+  void _onHorizontalDragEnd(DragEndDetails details) {
+    if (tempLeft != null) {
+      widget.changeProgressHandler(tempLeft);
+      tempLeft = null;
+    }
   }
- 
+
   @override
   Widget build(BuildContext context) {
-     if (widget.max == null || widget.current == null || widget.max == 0) {
-       return Container();
-     }
+    if (widget.max == null || widget.current == null || widget.max == 0) {
+      return Container();
+    }
 
     var mid = (widget.buffered ?? 0) / widget.max - left;
     if (mid < 0) {
@@ -155,32 +116,47 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
     var progress = buildProgress(left, mid, right);
     return GestureDetector(
       child: progress,
-        behavior: HitTestBehavior.opaque,
-        onTapDown: _onTapDown,
-        onTapUp: _onTapUp,
-        onHorizontalDragUpdate: _onHorizontalDragUpdate,
-        onHorizontalDragEnd: _onHorizontalDragEnd,
+      behavior: HitTestBehavior.opaque,
+      onTapDown: _onTapDown,
+      onTapUp: _onTapUp,
+      onHorizontalDragUpdate: _onHorizontalDragUpdate,
+      onHorizontalDragEnd: _onHorizontalDragEnd,
     );
     // return progress;
   }
 
   Column buildProgress(double left, double mid, double right) {
     return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      Container(
-        height: 3,
-        padding: EdgeInsets.symmetric(horizontal: 5),
-        child: Row(
-          key: _progressKey,
-          children: <Widget>[
-            buildeLeft(widget.playedColor, left),
-            buildColorWidget(widget.bufferColor, mid),
-            buildColorWidget(widget.backgroundColor, right),
-          ],
-        ),
-      )
-    ],
-  );
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          height: 3,
+          padding: EdgeInsets.symmetric(horizontal: 5),
+          child: Row(
+            key: _progressKey,
+            children: <Widget>[
+              buildColorWidget(widget.playedColor, left),
+              Container(
+                width: 0.1,
+                height: 0.1,
+                child: OverflowBox(
+                  maxWidth: 20,
+                  maxHeight: 20,
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    width: 10,
+                    height: 10,
+                    child: Image.asset(Images.logo),
+                    decoration: BoxDecoration(shape: BoxShape.circle),
+                  ),
+                ),
+              ),
+              buildColorWidget(widget.bufferColor, mid),
+              buildColorWidget(widget.backgroundColor, right),
+            ],
+          ),
+        )
+      ],
+    );
   }
 }

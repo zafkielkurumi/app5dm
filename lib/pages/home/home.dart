@@ -38,7 +38,8 @@ class _HomePageState extends State<HomePage>
                   data: Theme.of(context)
                       .copyWith(splashFactory: NoSplashFactory()),
                   child: RefreshIndicator(
-                    onRefresh: Provider.of<HomeModel>(ctx, listen: false).refresh ,
+                    onRefresh:
+                        Provider.of<HomeModel>(ctx, listen: false).refresh,
                     child: CustomScrollView(
                       slivers: [
                         child,

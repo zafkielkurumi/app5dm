@@ -7,11 +7,15 @@ class Player extends StatelessWidget {
   final IjkMediaController controller;
   final String noSourcePic;
   final bool fullScreen;
+  final Widget fullControllerWidget;
+  final Widget portraitControllerWidget;
   const Player({
     Key key,
     @required this.controller,
     this.fullScreen = false,
     this.noSourcePic,
+    this.fullControllerWidget,
+    this.portraitControllerWidget
   }) : super(key: key);
 
   @override
@@ -44,6 +48,8 @@ class Player extends StatelessWidget {
         return DefaultIJKWidget(
           controller: mediaController,
           fullScreen: fullScreen,
+          fullControllerWidget: fullControllerWidget,
+          portraitControllerWidget: portraitControllerWidget
         ); // 自定义
       },
     );

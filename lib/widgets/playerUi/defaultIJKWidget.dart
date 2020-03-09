@@ -7,15 +7,20 @@ import 'package:flutter/cupertino.dart';
 import 'fullController.dart';
 import 'portraitView.dart';
 
+
 class DefaultIJKWidget extends StatefulWidget {
   final IjkMediaController controller;
   final bool doubleTapPlay;
   final bool playWillPauseOther;
   final bool fullScreen;
+  final Widget fullControllerWidget;
+  final Widget portraitControllerWidget;
   DefaultIJKWidget(
       {@required this.controller,
       this.doubleTapPlay: true,
       this.fullScreen = false,
+      this.fullControllerWidget,
+      this.portraitControllerWidget,
       this.playWillPauseOther = true});
   @override
   _DefaultIJKWidgetState createState() => _DefaultIJKWidgetState();
@@ -23,10 +28,13 @@ class DefaultIJKWidget extends StatefulWidget {
 
 class _DefaultIJKWidgetState extends State<DefaultIJKWidget> {
   IjkMediaController get controller => widget.controller;
+  VideoInfo get videoInfo => controller.videoInfo;
   GlobalKey currentKey = GlobalKey();
   StreamSubscription controllerSubscription;
   Timer progressTimer;
   Timer isShowTimer;
+  OverlayEntry _overlayTip;
+
   bool _isShow = true;
   bool get  isShow => _isShow;
   set isShow(value) {
@@ -52,7 +60,7 @@ class _DefaultIJKWidgetState extends State<DefaultIJKWidget> {
   onTap() {
     isShowTimer?.cancel();
     if (isShow == false) {
-      isShowTimer = Timer(Duration(seconds: 2), () {
+      isShowTimer = Timer(Duration(seconds: 10), () {
         isShow = false;
         isShowTimer = null;
       });
@@ -86,14 +94,36 @@ class _DefaultIJKWidgetState extends State<DefaultIJKWidget> {
         if (info == null || !info.hasData) {
           return Container();
         }
-        return widget.fullScreen ? FullController(controller: controller, info: info,) : PortraitController(
-          controller: controller,
-          info: info,
-        );
+        var fullController = widget.fullControllerWidget ?? FullController(controller: controller, info: info,);
+        var portraitController = widget.portraitControllerWidget ?? PortraitController(controller: controller, info: info,);
+        return widget.fullScreen ? fullController : portraitController;
       },
     );
   }
 
+  void onHorizontalDragStart( DragStartDetails starDetails ) {
+    // showTip();
+  }
+  onHorizontalDragEnd(DragEndDetails endDetails) {
+    hideTip();
+  }
+  void showTip() {
+    hideTip();
+     _overlayTip = OverlayEntry(builder: (context) {
+      Widget w = IgnorePointer(child: Center(
+        child: Text('fsdfsdfsdfsd'),
+      ),);
+      if( widget.fullScreen) {
+        w = RotatedBox(quarterTurns: 1, child: w,);
+      }
+      return w;
+    });
+    Overlay.of(context).insert(_overlayTip);
+  }
+  void hideTip() {
+    _overlayTip?.remove();
+    _overlayTip = null;
+  }
   @override
   void initState() {
     super.initState();
@@ -119,6 +149,8 @@ class _DefaultIJKWidgetState extends State<DefaultIJKWidget> {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onDoubleTap: onDoubleTap(),
+      onHorizontalDragStart: onHorizontalDragStart,
+      onHorizontalDragEnd: onHorizontalDragEnd,
       onTap: onTap,
       key: currentKey,
       child: buildContent(),

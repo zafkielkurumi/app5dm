@@ -26,6 +26,7 @@ class TestModel extends BaseProvider {
   }
 
   changeString2() {
+    print('object');
     string2 = '${Random().nextInt(10)}$string2';
     notifyListeners();
   }
