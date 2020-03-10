@@ -5,7 +5,7 @@ typedef ChangeProgressHandler(double progress);
 
 typedef TapProgressHandler(double progress);
 
-class CustomProgressBar extends StatefulWidget {
+class CustomProgressBar extends StatefulWidget  {
   final double max;
   final double current;
   final double buffered; //buffer 暂无
@@ -31,7 +31,7 @@ class CustomProgressBar extends StatefulWidget {
   _CustomProgressBarState createState() => _CustomProgressBarState();
 }
 
-class _CustomProgressBarState extends State<CustomProgressBar> {
+class _CustomProgressBarState extends State<CustomProgressBar>  {
   GlobalKey _progressKey = GlobalKey();
   double tempLeft; // 拖动playbar显示修改
 
@@ -75,11 +75,8 @@ class _CustomProgressBarState extends State<CustomProgressBar> {
   }
 
   void _onTapDown(TapDownDetails details) {
-    print(details.localPosition);
-    print(details.globalPosition);
     var progress = getProgress(details.localPosition);
-    // widget.tapProgressHandler(progress);
-    // todo showtip
+    widget.tapProgressHandler(progress);
   }
 
   void _onTapUp(TapUpDetails details) {

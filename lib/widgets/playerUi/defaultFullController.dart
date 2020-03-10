@@ -2,17 +2,20 @@ import 'dart:io';
 
 import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/playerUi/CustomProgressBar.dart';
+import 'package:app5dm/widgets/playerUi/tip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 
-class FullController extends StatelessWidget {
+class DefaultFullController extends StatelessWidget {
   final IjkMediaController controller;
   final VideoInfo info;
   final bool playWillPauseOther;
-  FullController(
+  final TipHelper tipHelper;
+  DefaultFullController(
       {Key key,
       @required this.controller,
       @required this.info,
+      this.tipHelper,
       this.playWillPauseOther})
       : super(key: key);
 
@@ -29,7 +32,7 @@ class FullController extends StatelessWidget {
               // child: ProgressBar(),
               ),
         ),
-        FullFooter(controller: controller, info: info)
+        FullFooter(controller: controller, info: info, tipHelper: tipHelper,)
       ],
     );
   }
@@ -40,12 +43,14 @@ class FullFooter extends StatelessWidget {
       {Key key,
       @required this.controller,
       @required this.info,
+      this.tipHelper,
       this.playWillPauseOther = true})
       : super(key: key);
 
   final IjkMediaController controller;
   final VideoInfo info;
   final bool playWillPauseOther;
+  final TipHelper tipHelper;
   bool get haveTime {
     return info.hasData && info.duration > 0;
   }
@@ -100,9 +105,10 @@ class FullFooter extends StatelessWidget {
               playedColor: Theme.of(context).primaryColor,
               changeProgressHandler: (progress) async {
                   await controller.seekToProgress(progress);
+                   tipHelper.hideTip();
               },
               tapProgressHandler: (progress) {
-                
+                 tipHelper.showTip(progress, controller.videoInfo, fullScreen: true);
               }
             ),
             ),

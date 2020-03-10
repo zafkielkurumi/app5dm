@@ -1,26 +1,31 @@
+import 'package:app5dm/constants/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 import 'IjkStatusWidgets.dart';
 import './DefaultIJKWidget.dart';
+import 'portraitView.dart';
+
+
+
 
 class Player extends StatelessWidget {
   final IjkMediaController controller;
   final String noSourcePic;
   final bool fullScreen;
-  final Widget fullControllerWidget;
-  final Widget portraitControllerWidget;
+  final FullControllerWidget fullControllerWidget;
   const Player({
     Key key,
     @required this.controller,
     this.fullScreen = false,
     this.noSourcePic,
     this.fullControllerWidget,
-    this.portraitControllerWidget
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return IjkPlayer(
+    return Container(
+      height: playerHeight,
+      child: IjkPlayer(
       mediaController: controller,
       statusWidgetBuilder: (ctx, mediaController, status) {
         if (status == IjkStatus.noDatasource) {
@@ -49,9 +54,9 @@ class Player extends StatelessWidget {
           controller: mediaController,
           fullScreen: fullScreen,
           fullControllerWidget: fullControllerWidget,
-          portraitControllerWidget: portraitControllerWidget
         ); // 自定义
       },
+    ),
     );
   }
 }

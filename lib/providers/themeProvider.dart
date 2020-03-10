@@ -27,7 +27,6 @@ class CustomThemeModel extends ChangeNotifier {
     //     statusBarBrightness: Brightness.light,
     //   ),
     // );
-    print('object');
     changethemeData();
     notifyListeners();
   }

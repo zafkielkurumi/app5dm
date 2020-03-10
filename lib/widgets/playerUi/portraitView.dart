@@ -3,18 +3,26 @@ import 'dart:io';
 import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/playerUi/CustomProgressBar.dart';
 import 'package:app5dm/widgets/playerUi/fullScreen.dart';
+import 'package:app5dm/widgets/playerUi/tip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
+
+typedef Widget FullControllerWidget(
+    TipHelper tipHelper, IjkMediaController controller);
 
 class PortraitController extends StatelessWidget {
   final IjkMediaController controller;
   final VideoInfo info;
   final bool playWillPauseOther;
+  final TipHelper tipHelper;
+  final FullControllerWidget fullControllerWidget;
   PortraitController(
       {Key key,
       @required this.controller,
       @required this.info,
+      this.tipHelper,
+      this.fullControllerWidget,
       this.playWillPauseOther})
       : super(key: key);
 
@@ -29,27 +37,33 @@ class PortraitController extends StatelessWidget {
         Expanded(
           child: Container(),
         ),
-        PortaitFooter(controller: controller, info: info)
+        PortaitFooter(
+            controller: controller,
+            info: info,
+            tipHelper: tipHelper,
+            fullControllerWidget: fullControllerWidget)
       ],
     );
   }
 }
 
 class PortaitFooter extends StatelessWidget {
+  final IjkMediaController controller;
+  final VideoInfo info;
+  final bool playWillPauseOther;
+  final TipHelper tipHelper;
+  final FullControllerWidget fullControllerWidget;
   const PortaitFooter(
       {Key key,
       @required this.controller,
       @required this.info,
+      this.tipHelper,
+      this.fullControllerWidget,
       this.playWillPauseOther = true})
       : super(key: key);
-
-  final IjkMediaController controller;
-  final VideoInfo info;
-  final bool playWillPauseOther;
   bool get haveTime {
     return info.hasData && info.duration > 0;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -83,8 +97,11 @@ class PortaitFooter extends StatelessWidget {
                   playedColor: Theme.of(context).primaryColor,
                   changeProgressHandler: (progress) async {
                     await controller.seekToProgress(progress);
+                    tipHelper.hideTip();
                   },
-                  tapProgressHandler: (progress) {}),
+                  tapProgressHandler: (progress) {
+                    tipHelper.showTip(progress, controller.videoInfo);
+                  }),
             ),
           ),
           Text(
@@ -111,10 +128,8 @@ class PortaitFooter extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => PlayerFullScreen(controller))).then((r) {
-                      SystemChrome.setEnabledSystemUIOverlays(
-                        SystemUiOverlay.values);
-                    });
+                    builder: (context) =>
+                        PlayerFullScreen(controller, fullControllerWidget)));
               })
         ],
       ),

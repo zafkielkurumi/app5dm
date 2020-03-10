@@ -20,7 +20,6 @@ class NetUtil {
     dio.interceptors
       ..add(CookieManager(cookieJar))
       ..add((InterceptorsWrapper(onRequest: (RequestOptions options) async {
-        print(options.path);
          debugPrint('net start');
         return options;
       }, onResponse: (Response response) async {
@@ -47,7 +46,7 @@ class BaseHttp extends DioForNative {
     interceptors
       ..add(CookieManager(cookieJar))
       ..add((InterceptorsWrapper(onRequest: (RequestOptions options) async {
-        print('start');
+        debugPrint('start');
         return options;
       }, onResponse: (Response response) async {
         return response;

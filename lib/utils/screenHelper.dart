@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui' as ui;
 
 class Screen {
+  /// 弊端，设置横屏值不会变
   static MediaQueryData mediaQueryData = MediaQueryData.fromWindow(ui.window);
   static num setWidth(double size) {
     return ScreenUtil().setWidth(size);
