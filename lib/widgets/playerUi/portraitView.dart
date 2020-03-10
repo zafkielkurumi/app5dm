@@ -3,71 +3,66 @@ import 'dart:io';
 import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/playerUi/CustomProgressBar.dart';
 import 'package:app5dm/widgets/playerUi/fullScreen.dart';
+import 'package:app5dm/widgets/playerUi/tip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
+
+typedef Widget FullControllerWidget(
+    TipHelper tipHelper, IjkMediaController controller);
 
 class PortraitController extends StatelessWidget {
   final IjkMediaController controller;
   final VideoInfo info;
   final bool playWillPauseOther;
+  final TipHelper tipHelper;
+  final FullControllerWidget fullControllerWidget;
   PortraitController(
       {Key key,
       @required this.controller,
       @required this.info,
+      this.tipHelper,
+      this.fullControllerWidget,
       this.playWillPauseOther})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (!info.hasData) {
+    if (!info.hasData || info.duration <= 0) {
       return Container();
     }
     return Column(
       children: <Widget>[
         PortaitHeader(),
         Expanded(
-          child: Container(
-              // child: ProgressBar(),
-              ),
+          child: Container(),
         ),
-        PortaitFooter(controller: controller, info: info)
+        PortaitFooter(
+            controller: controller,
+            info: info,
+            tipHelper: tipHelper,
+            fullControllerWidget: fullControllerWidget)
       ],
     );
   }
 }
 
 class PortaitFooter extends StatelessWidget {
+  final IjkMediaController controller;
+  final VideoInfo info;
+  final bool playWillPauseOther;
+  final TipHelper tipHelper;
+  final FullControllerWidget fullControllerWidget;
   const PortaitFooter(
       {Key key,
       @required this.controller,
       @required this.info,
+      this.tipHelper,
+      this.fullControllerWidget,
       this.playWillPauseOther = true})
       : super(key: key);
-
-  final IjkMediaController controller;
-  final VideoInfo info;
-  final bool playWillPauseOther;
   bool get haveTime {
     return info.hasData && info.duration > 0;
-  }
-
-  Widget buildCurrentTime() {
-    return haveTime
-        ? Text(
-            TimeHelper.getTimeText(info.currentPosition),
-            style: TextStyle(color: Colors.white),
-          )
-        : Container();
-  }
-
-  Widget buildMaxTime() {
-    return haveTime
-        ? Text(
-            TimeHelper.getTimeText(info.duration),
-            style: TextStyle(color: Colors.white),
-          )
-        : Container();
   }
 
   @override
@@ -102,11 +97,17 @@ class PortaitFooter extends StatelessWidget {
                   playedColor: Theme.of(context).primaryColor,
                   changeProgressHandler: (progress) async {
                     await controller.seekToProgress(progress);
+                    tipHelper.hideTip();
                   },
-                  tapProgressHandler: (progress) {}),
+                  tapProgressHandler: (progress) {
+                    tipHelper.showTip(progress, controller.videoInfo);
+                  }),
             ),
           ),
-          buildCurrentTime(),
+          Text(
+            TimeHelper.getTimeText(info.currentPosition),
+            style: TextStyle(color: Colors.white),
+          ),
           haveTime
               ? Padding(
                   padding: EdgeInsets.symmetric(horizontal: 2),
@@ -116,7 +117,10 @@ class PortaitFooter extends StatelessWidget {
                   ),
                 )
               : SizedBox.shrink(),
-          buildMaxTime(),
+          Text(
+            TimeHelper.getTimeText(info.duration),
+            style: TextStyle(color: Colors.white),
+          ),
           IconButton(
               icon: Icon(
                 Icons.fullscreen,
@@ -124,10 +128,8 @@ class PortaitFooter extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => PlayerFullScreen(controller))).then((r) {
-                      SystemChrome.setEnabledSystemUIOverlays(
-                        SystemUiOverlay.values);
-                    });
+                    builder: (context) =>
+                        PlayerFullScreen(controller, fullControllerWidget)));
               })
         ],
       ),

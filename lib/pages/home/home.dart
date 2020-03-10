@@ -38,7 +38,8 @@ class _HomePageState extends State<HomePage>
                   data: Theme.of(context)
                       .copyWith(splashFactory: NoSplashFactory()),
                   child: RefreshIndicator(
-                    onRefresh: Provider.of<HomeModel>(ctx, listen: false).refresh ,
+                    onRefresh:
+                        Provider.of<HomeModel>(ctx, listen: false).refresh,
                     child: CustomScrollView(
                       slivers: [
                         child,
@@ -164,6 +165,7 @@ class HomeSwiper extends StatelessWidget {
           width: Screen.width - 20,
           height: tranferImageWidthToHeiht(Screen.width - 20),
           child: Swiper(
+            autoplay: true,
             onTap: (index) {
               var season = videoItem.seasons[index];
               Navigator.of(context).pushNamed(Routes.PLAYERPAGE,

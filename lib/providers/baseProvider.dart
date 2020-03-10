@@ -54,6 +54,7 @@ getFunction(BuildContext context, T) {
 
   onError( e) {
      if (viewState == ViewState.first) {
+       debugPrint(e.toString());
         setError();
       }
   }

@@ -1,29 +1,79 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 
-enum  RouteType  {
-  opactity,
-  rotate
+class CustomRoute extends PageRoute {
+  final WidgetBuilder builder;
+  final bool isDismissible;
+  CustomRoute({this.builder, this.isDismissible:true}) : assert(builder != null);
+
+  @override
+  Color get barrierColor => null;
+
+  @override
+  bool get barrierDismissible => isDismissible;
+
+  // 透明背景
+  @override
+  bool get opaque => false;
+
+  @override
+  String get barrierLabel => null;
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation,
+      Animation<double> secondaryAnimation) {
+    return CustomSingleChildLayout(
+      delegate: RouteLayoutDelegate(progress: 1),
+      child: builder(context),
+    );
+  }
+
+  /// 页面切换动画
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return SlideTransition(
+      position: Tween<Offset>(begin: Offset(2, 0), end: Offset(0, 0))
+          .animate(animation),
+      child: child,
+    );
+  }
+
+  @override
+  bool get maintainState => true;
+
+  @override
+  Duration get transitionDuration => Duration(milliseconds: 500);
 }
 
 
-class CustomRoute extends PageRouteBuilder {
-  final Widget widget;
-  final routeType;
-  CustomRoute(this.widget, { this.routeType: RouteType.rotate})
-      : super(pageBuilder: (context, animation, secondaryAnimation) {
-          return widget;
-        }, transitionsBuilder: (
-          context,
-          animation,
-          secondaryAnimation,
-          child,
-        ) {
-          //  return FadeTransition(
-          //     opacity: animation,
-          //     child: child,
-          //   );
-          return Transform.rotate(angle: pi / 2, child: child,);
-        });
-  
+class RouteLayoutDelegate extends SingleChildLayoutDelegate {
+  RouteLayoutDelegate({this.progress, this.isScrollControlled: false});
+
+  final double progress;
+  final bool isScrollControlled;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    print(constraints.maxWidth);
+    return BoxConstraints(
+      minWidth: 0.0,
+      maxWidth: constraints.maxWidth,
+      minHeight: 0.0,
+      maxHeight: constraints.maxHeight, /// 最大高度
+    );
+  }
+  /// 显示的位置
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    return Offset(size.width - childSize.width * progress, 0.0);
+  }
+
+  @override
+  bool shouldRelayout(RouteLayoutDelegate oldDelegate) {
+    return progress != oldDelegate.progress;
+  }
 }

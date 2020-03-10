@@ -69,7 +69,6 @@ class _TimetableState extends State<Timetable>
                           snap: false,
                           elevation: 0, //
                           title: Text('时间表'),
-                          // flexibleSpace: FlexibleSpaceBar(),
                         ),
                         TabAppBar(tabController: _tabController, timelines: timelines),
                       ];
@@ -80,41 +79,15 @@ class _TimetableState extends State<Timetable>
                     innerScrollPositionKeyBuilder: () {
                       return Key('tab${_tabController.index}');
                     },
-                    body: Column(
-                      children: <Widget>[
-                        Expanded(
-                            child: TabBarView(
+                    body:  TabBarView(
                           controller: _tabController,
                           children: List.generate(timelines.length, (index) {
                             var timeline = timelines[index];
 
                             return NestedScrollViewInnerScrollPositionKeyWidget(
                                 Key('tab$index'), TimeLineList(timeline));
-                            // 这种无法在header reset时候body保持位置
-                            // return NestedScrollViewInnerScrollPositionKeyWidget(
-                            //   Key('tab$index'),
-                            //   ListView.builder(
-                            //     key: PageStorageKey('tab$index'),
-                            //     itemBuilder: (c, index) {
-                            //       Seasons season = timeline.seasons[index];
-                            //       return InkWell(
-                            //         child: SeasonTitle(
-                            //           season: season,
-                            //         ),
-                            //         onTap: () {
-                            //           Navigator.of(context).pushNamed(
-                            //               Routes.PLAYERPAGE,
-                            //               arguments: {"link": season.stringId});
-                            //         },
-                            //       );
-                            //     },
-                            //     itemCount: timeline.seasons.length,
-                            //   ),
-                            // );
                           }),
-                        ))
-                      ],
-                    ),
+                        ),
                   ),
                 ),
               );
@@ -138,6 +111,7 @@ class TabAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData _theme = Theme.of(context);
     return SliverAppBar(
       pinned: true,
       floating: false,
@@ -145,12 +119,12 @@ class TabAppBar extends StatelessWidget {
       title: TabBar(
         controller: _tabController,
         indicatorSize: TabBarIndicatorSize.label,
-        labelColor: Theme.of(context).primaryColor,
-        unselectedLabelColor: Theme.of(context).primaryTextTheme.display1.color,
+        labelColor: _theme.primaryColor,
+        unselectedLabelColor: _theme.primaryTextTheme.display1.color,
         indicator: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).primaryTextTheme.display1.color,
+              color: _theme.primaryTextTheme.display1.color,
               spreadRadius: 3
             )
           ],

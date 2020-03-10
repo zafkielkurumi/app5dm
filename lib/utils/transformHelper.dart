@@ -108,10 +108,10 @@ tranferForbiden(String html) async {
   var base = 'www.5dm.com'; // len
 }
 
-
 Future<VideoDetail> tranferDetail(String html) async {
   Document document = parse(html);
-  String videoTitle = document.querySelector('h1.video-title').text;
+  String videoTitle = document.querySelector('h1.video-title')?.text;
+  String brief = document.querySelector('.video-conent .item-content p')?.text;
   //处理ifram
   Element iframe = document.querySelector('iframe');
   String videoSrc = iframe != null
@@ -129,7 +129,9 @@ Future<VideoDetail> tranferDetail(String html) async {
     sources.add(Sources(links: links, sourceTitle: sourceTitle));
   });
   return VideoDetail(
-      sources: sources, videoSrc: videoSrc, videoTitle: videoTitle);
+    sources: sources,
+    videoSrc: videoSrc,
+    videoTitle: videoTitle,
+    brief: brief
+  );
 }
-
-

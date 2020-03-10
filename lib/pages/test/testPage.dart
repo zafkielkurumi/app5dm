@@ -16,17 +16,41 @@ class TestPage extends StatelessWidget {
         create: (_) => TestModel(),
         child: Selector<TestModel, List>(
             selector: (_, testModel) => testModel.numberList,
-            // shouldRebuild: (prev, next) => prev.first != next.first,
             builder: (ctx, numberList, child) {
+              TestModel model = Provider.of<TestModel>(ctx, listen: false);
               return Column(
                 children: <Widget>[
                   RaisedButton(
                     onPressed: () {
-                      Provider.of<TestModel>(ctx, listen: false).changeNumber();
+                      model.changeNumber();
                     },
                     child: Text(numberList.first.toString()),
                   ),
-                  Text(numberList.last.toString())
+                  Text(numberList.last.toString()),
+                  RaisedButton(
+                    onPressed: () {
+                      model.changeString2();
+                    },
+                    child: Selector<TestModel, String>(
+                      child: Selector<TestModel, String>(
+                        builder: (_, string1, child) {
+                          print('string1');
+                          return InkWell(
+                            onTap: model.changeString1,
+                            child: Text(string1),
+                          );
+                        },
+                        selector: (_, testModel) => testModel.string1,
+                      ),
+                      builder: (_, string2, child) {
+                        print('string2');
+                        return Row(
+                          children: <Widget>[Text(string2), child],
+                        );
+                      },
+                      selector: (_, testModel) => testModel.string2,
+                    ),
+                  ),
                 ],
               );
             }),
