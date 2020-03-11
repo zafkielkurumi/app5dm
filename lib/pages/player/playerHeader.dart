@@ -16,57 +16,39 @@ class PlayerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     PlayerModel model = Provider.of<PlayerModel>(context, listen: false);
-    return Selector<PlayerModel, bool>(
-        selector: (_, playerModel) => playerModel.isShowTitle,
+    return buildPlayerHeader(model);
+  }
+
+  SliverPersistentHeader buildPlayerHeader(PlayerModel model) {
+    return SliverPersistentHeader(
+    floating: true,
+    delegate: CustomSliverPersistentHeader(
         child: Selector<PlayerModel, ViewState>(
-            selector: (_, playerModel) => playerModel.viewState,
-            child: Player(
-              controller: model.playerController,
-              noSourcePic: model.noSourcePic,
-              fullControllerWidget: (tip, mediaController) {
-                return FullController(
-                  controller: mediaController,
-                  info: mediaController.videoInfo,
-                  tipHelper: tip,
-                  playerModel: model,
-                );
-              },
-            ),
-            builder: (_, viewState, player) {
-              return Stack(
-                children: <Widget>[
-                  player,
-                  viewState == ViewState.pending
-                      ? PreparingView()
-                      : SizedBox.shrink()
-                ],
+          selector: (_, playerModel) => playerModel.viewState,
+          child: Player(
+            controller: model.playerController,
+            noSourcePic: model.noSourcePic,
+            fullControllerWidget: (tip, mediaController) {
+              return FullController(
+                controller: mediaController,
+                info: mediaController.videoInfo,
+                tipHelper: tip,
+                playerModel: model,
               );
             },
           ),
-        builder: (_, isShowTitle, child) {
-          return SliverAppBar(
-            pinned: true,
-            leading: isShowTitle
-                ? IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: null,
-                  )
-                : SizedBox.shrink(),
-            expandedHeight: playerHeight,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: EdgeInsets.only(bottom: 0),
-              centerTitle: true,
-              background: child,
-              collapseMode: CollapseMode.pin,
-              title: isShowTitle
-                  ? Center(
-                      child: GestureDetector(
-                      onTap: model.changePausePinHeight(),
-                      child: Text('立即播放2'),
-                    ))
-                  : SizedBox.shrink(),
-            ),
-          );
-        });
+          builder: (_, viewState, player) {
+            return Stack(
+              children: <Widget>[
+                player,
+                viewState == ViewState.pending
+                    ? PreparingView()
+                    : SizedBox.shrink()
+              ],
+            );
+          },
+        ),
+        minHeigth: playerHeight),
+  );
   }
 }

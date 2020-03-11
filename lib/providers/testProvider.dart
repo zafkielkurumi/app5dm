@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:app5dm/constants/config.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import './baseProvider.dart';
 
@@ -19,6 +21,18 @@ class TestModel extends BaseProvider {
 
    List _numberList = [1, 2];
   List get numberList => _numberList;
+
+  double pinHeigt = playerHeight;
+  ScrollController sc = ScrollController();
+
+  changePinHeight() {
+    pinHeigt = pinHeigt == playerHeight ? kToolbarHeight : playerHeight;
+    print(pinHeigt);
+    // sc.position.applyContentDimensions(
+    //     sc.position.minScrollExtent,
+    //     sc.position.maxScrollExtent + pinHeigt);
+        notifyListeners();
+  }
 
   changeString1() {
     _string1 = 'string${Random().nextInt(10)}';

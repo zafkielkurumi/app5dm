@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:app5dm/constants/config.dart';
 import 'package:app5dm/models/index.dart';
 import 'package:app5dm/providers/baseProvider.dart';
@@ -7,9 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 
 class PlayerModel extends BaseProvider {
-  PlayerModel({@required String link, String noSourcePic}) {
+  PlayerModel({@required String link, String noSourcePic,}) {
     _noSourcePic = noSourcePic;
     var url = link + '?link=0';
+    initListener();
     getData(url);
   }
 
@@ -28,34 +31,39 @@ class PlayerModel extends BaseProvider {
   ScrollController _scrollController = ScrollController();
   ScrollController get scrollController => _scrollController;
 
-  // num _height = Screen.setHeight(450);
   double _pinHeight = playerHeight;
-  double get pinHeight => _pinHeight;
+  double get pinHeight =>_pinHeight;
+
 
   bool _isShowTitle = false;
   bool get isShowTitle => _isShowTitle;
 
+  bool _isPlaying = true;
+
+  StreamSubscription _videoSteam;
+
   Future getData(String link) async {
     _link = link;
-    try {
-      VideoDetail detail = await VideoDetailApi.getVideoDetail(link);
-      if (detail != null) {
-        _videoDetail = detail;
-        playerController.setNetworkDataSource(detail.videoSrc);
-        setContent();
-      } else {
-        setUnAuth();
-      }
-    } catch (e) {
-      onError(e);
-    }
+    setContent();
+    // try {
+    //   VideoDetail detail = await VideoDetailApi.getVideoDetail(link);
+    //   if (detail != null) {
+    //     _videoDetail = detail;
+    //     playerController.setNetworkDataSource(detail.videoSrc);
+    //     setContent();
+    //   } else {
+    //     setUnAuth();
+    //   }
+    // } catch (e) {
+    //   onError(e);
+    // }
   }
-
+  /// 
   void changeLink(String link) {
     setPending();
     getData(link);
   }
-
+  /// 下一集
   nextSeason() {
      setPending();
      var url = findLink();
@@ -75,7 +83,7 @@ class PlayerModel extends BaseProvider {
      }
      return null;
   }
-
+  /// 查找第几话
   int findLinkIndex() {
      for (var source in videoDetail.sources) {
         var index = source.links.indexWhere((r) => r.link == link);
@@ -103,12 +111,24 @@ class PlayerModel extends BaseProvider {
   //   );
   // }
 
-  changePausePinHeight() {
-    _pinHeight = kToolbarHeight;
+
+
+  changePinHeight(double pinHeight) {
+    _pinHeight = pinHeight;
     scrollController.position.applyContentDimensions(
         scrollController.position.minScrollExtent,
-        scrollController.position.maxScrollExtent + _pinHeight);
+        scrollController.position.maxScrollExtent + pinHeight);
+        notifyListeners();
   }
+  testchangePinHeight() {
+    _pinHeight = _pinHeight == playerHeight ? kToolbarHeight :playerHeight;
+    // scrollController.position.applyContentDimensions(
+    //     scrollController.position.minScrollExtent,
+    //     scrollController.position.maxScrollExtent + _pinHeight);
+        // notifyListeners();
+  }
+
+  
 
   offsetListener() {
     if (scrollController.offset > Screen.setHeight(300) && !_isShowTitle) {
@@ -121,13 +141,16 @@ class PlayerModel extends BaseProvider {
     }
   }
 
-  initScroll() {
+  initListener() {
     scrollController.addListener(offsetListener);
+    _videoSteam = playerController.videoInfoStream.listen((info) {
+      if (_isPlaying != info.isPlaying) {
+        _isPlaying = info.isPlaying;
+        changePinHeight((_isPlaying? playerHeight: kToolbarHeight) + Screen.statusHeight);
+      }
+    });
   }
 
-  removeLis() {
-    scrollController.removeListener(offsetListener);
-  }
 
   @override
   retry() {
@@ -137,6 +160,7 @@ class PlayerModel extends BaseProvider {
 
   @override
   void dispose() {
+    _videoSteam?.cancel();
     playerController?.dispose();
     scrollController?.dispose();
     super.dispose();

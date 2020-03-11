@@ -1,4 +1,5 @@
 import 'package:app5dm/app5dm_route.dart';
+import 'package:app5dm/pages/test/demo.dart';
 import 'package:app5dm/pages/test/testPage.dart';
 import 'package:app5dm/pages/test/testRoutePage.dart';
 import 'package:app5dm/widgets/customRoute.dart';
@@ -31,13 +32,7 @@ class HomeDrawer extends StatelessWidget {
             ),
             RaisedButton(
               onPressed: () {
-                showModalBottomSheet(isDismissible: true ,context: context, builder: (context) {
-                  return Container(
-                    height: 500,
-                    color: Colors.red,
-                    child: Text('data4445555555555555555555'),
-                  );
-                });
+                 Navigator.of(context).push(CustomRoute(builder: (context)=> DemoPage()));
               },
               child: Text('测试bottom'),
             ),

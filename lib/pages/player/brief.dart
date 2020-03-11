@@ -19,41 +19,45 @@ class _BriefState extends State<Brief> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    PlayerModel _model = Provider.of<PlayerModel>(context, listen: false);
     return ListView(
       padding: EdgeInsets.symmetric(horizontal: 5),
       children: <Widget>[
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Selector<PlayerModel, String>(
-              selector: (_, playerModel) => playerModel.videoDetail?.videoTitle,
-              builder: (_, videoTitle, c) {
-                return Text(videoTitle);
-              },
-            ),
+            // Selector<PlayerModel, String>(
+            //   selector: (_, playerModel) => playerModel.videoDetail.videoTitle,
+            //   builder: (_, videoTitle, c) {
+            //     return Text(videoTitle);
+            //   },
+            // ),
             IconButton(icon: Icon(Icons.favorite_border), onPressed: null)
           ],
         ),
-        Selector<PlayerModel, String>(
-          selector: (_, playerModel) => playerModel.videoDetail.brief,
-          builder: (_, brief, c) {
-            return Text(brief);
-          },
-        ),
-        Selector<PlayerModel, List<Sources>>(
-          selector: (_, playerModel) => playerModel.videoDetail.sources,
-          shouldRebuild: (prev, next) => false,
-          builder: (_, sources, c) {
-            return Column(
-              children: List.generate(sources.length, (index) {
-                Sources source = sources[index];
-                return Container(
-                  child: SourceWidget(source: source),
-                );
-              }),
-            );
-          },
-        )
+        // Selector<PlayerModel, String>(
+        //   selector: (_, playerModel) => playerModel.videoDetail.brief,
+        //   builder: (_, brief, c) {
+        //     return Text(brief);
+        //   },
+        // ),
+        RaisedButton(onPressed: () {
+          _model.testchangePinHeight();
+        }, child: Text('data'),),
+        // Selector<PlayerModel, List<Sources>>(
+        //   selector: (_, playerModel) => playerModel.videoDetail.sources,
+        //   shouldRebuild: (prev, next) => false,
+        //   builder: (_, sources, c) {
+        //     return Column(
+        //       children: List.generate(sources.length, (index) {
+        //         Sources source = sources[index];
+        //         return Container(
+        //           child: SourceWidget(source: source),
+        //         );
+        //       }),
+        //     );
+        //   },
+        // ),
       ],
     );
   }
