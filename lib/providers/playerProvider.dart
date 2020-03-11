@@ -9,10 +9,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 
 class PlayerModel extends BaseProvider {
-  PlayerModel({@required String link, String noSourcePic,}) {
+  PlayerModel({
+    @required String link,
+    @required this.playController,
+    @required this.scrollController,
+    String noSourcePic,
+  }) {
     _noSourcePic = noSourcePic;
     var url = link + '?link=0';
-    initListener();
     getData(url);
   }
 
@@ -25,83 +29,78 @@ class PlayerModel extends BaseProvider {
   String _link = '';
   String get link => _link;
 
-  IjkMediaController _playerController = IjkMediaController();
-  IjkMediaController get playerController => _playerController;
-
-  ScrollController _scrollController = ScrollController();
-  ScrollController get scrollController => _scrollController;
-
   double _pinHeight = playerHeight;
-  double get pinHeight =>_pinHeight;
-
+  double get pinHeight => _pinHeight;
 
   bool _isShowTitle = false;
   bool get isShowTitle => _isShowTitle;
 
-  bool _isPlaying = true;
+  IjkMediaController playController;
+  ScrollController scrollController;
 
-  StreamSubscription _videoSteam;
 
   Future getData(String link) async {
     _link = link;
-    setContent();
-    // try {
-    //   VideoDetail detail = await VideoDetailApi.getVideoDetail(link);
-    //   if (detail != null) {
-    //     _videoDetail = detail;
-    //     playerController.setNetworkDataSource(detail.videoSrc);
-    //     setContent();
-    //   } else {
-    //     setUnAuth();
-    //   }
-    // } catch (e) {
-    //   onError(e);
-    // }
+    try {
+      VideoDetail detail = await VideoDetailApi.getVideoDetail(link);
+      if (detail != null) {
+        _videoDetail = detail;
+        playController.setNetworkDataSource(detail.videoSrc, autoPlay: true);
+        setContent();
+      } else {
+        setUnAuth();
+      }
+    } catch (e) {
+      onError(e);
+    }
   }
-  /// 
+
+  ///
   void changeLink(String link) {
     setPending();
     getData(link);
   }
+
   /// 下一集
   nextSeason() {
-     setPending();
-     var url = findLink();
-     if (url.isNotEmpty) {
-       getData(url);
-     } else {
-       setContent();
-     }
+    setPending();
+    var url = findLink();
+    if (url.isNotEmpty) {
+      getData(url);
+    } else {
+      setContent();
+    }
   }
 
   Sources findSource() {
     for (var source in videoDetail.sources) {
-        var index = source.links.indexWhere((r) => r.link == link);
-        if(index > -1) {
-          return source;
-        }
-     }
-     return null;
+      var index = source.links.indexWhere((r) => r.link == link);
+      if (index > -1) {
+        return source;
+      }
+    }
+    return null;
   }
+
   /// 查找第几话
   int findLinkIndex() {
-     for (var source in videoDetail.sources) {
-        var index = source.links.indexWhere((r) => r.link == link);
-        if(index > -1) {
-          return index;
-        }
-     }
-     return -1;
+    for (var source in videoDetail.sources) {
+      var index = source.links.indexWhere((r) => r.link == link);
+      if (index > -1) {
+        return index;
+      }
+    }
+    return -1;
   }
 
   String findLink() {
     for (var source in videoDetail.sources) {
-        var index = source.links.indexWhere((r) => r.link == link);
-        if(index > -1 && index < source.links.length) {
-          return source.links[index + 1].link;
-        }
-     }
-     return '';
+      var index = source.links.indexWhere((r) => r.link == link);
+      if (index > -1 && index < source.links.length) {
+        return source.links[index + 1].link;
+      }
+    }
+    return '';
   }
 
   // void setOptions() {
@@ -110,25 +109,6 @@ class PlayerModel extends BaseProvider {
   //     [TargetPlatform.iOS, TargetPlatform.android],
   //   );
   // }
-
-
-
-  changePinHeight(double pinHeight) {
-    _pinHeight = pinHeight;
-    scrollController.position.applyContentDimensions(
-        scrollController.position.minScrollExtent,
-        scrollController.position.maxScrollExtent + pinHeight);
-        notifyListeners();
-  }
-  testchangePinHeight() {
-    _pinHeight = _pinHeight == playerHeight ? kToolbarHeight :playerHeight;
-    // scrollController.position.applyContentDimensions(
-    //     scrollController.position.minScrollExtent,
-    //     scrollController.position.maxScrollExtent + _pinHeight);
-        // notifyListeners();
-  }
-
-  
 
   offsetListener() {
     if (scrollController.offset > Screen.setHeight(300) && !_isShowTitle) {
@@ -143,14 +123,7 @@ class PlayerModel extends BaseProvider {
 
   initListener() {
     scrollController.addListener(offsetListener);
-    _videoSteam = playerController.videoInfoStream.listen((info) {
-      if (_isPlaying != info.isPlaying) {
-        _isPlaying = info.isPlaying;
-        changePinHeight((_isPlaying? playerHeight: kToolbarHeight) + Screen.statusHeight);
-      }
-    });
   }
-
 
   @override
   retry() {
@@ -160,9 +133,6 @@ class PlayerModel extends BaseProvider {
 
   @override
   void dispose() {
-    _videoSteam?.cancel();
-    playerController?.dispose();
-    scrollController?.dispose();
     super.dispose();
   }
 }

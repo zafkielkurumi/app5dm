@@ -28,9 +28,6 @@ class TestModel extends BaseProvider {
   changePinHeight() {
     pinHeigt = pinHeigt == playerHeight ? kToolbarHeight : playerHeight;
     print(pinHeigt);
-    // sc.position.applyContentDimensions(
-    //     sc.position.minScrollExtent,
-    //     sc.position.maxScrollExtent + pinHeigt);
         notifyListeners();
   }
 

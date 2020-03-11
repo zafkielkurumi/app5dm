@@ -126,13 +126,6 @@ class PauseView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container();
-    // return Center(
-    //   child: IconButton(
-    //       icon: Icon(Icons.pause, ),
-    //       onPressed: () {
-    //         _controller.play();
-    //       }),
-    // );
   }
 }
 

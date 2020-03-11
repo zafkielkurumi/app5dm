@@ -1,5 +1,4 @@
 import 'package:app5dm/constants/config.dart';
-import 'package:app5dm/constants/images.dart';
 import 'package:app5dm/widgets/index.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/gestures.dart';
@@ -12,12 +11,10 @@ class TestRoutePage extends StatefulWidget {
 
 class _TestRoutePageState extends State<TestRoutePage>
     with TickerProviderStateMixin {
-  TabController _tabController;
   ScrollController _sc = ScrollController();
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -97,10 +94,7 @@ class TabItem extends StatefulWidget {
 
 class _TabItemState extends State<TabItem> with AutomaticKeepAliveClientMixin {
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
-
-  ScrollController _sc = ScrollController();
 
   @override
   Widget build(BuildContext context) {

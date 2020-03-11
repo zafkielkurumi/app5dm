@@ -1,5 +1,4 @@
 import 'package:app5dm/constants/config.dart';
-import 'package:app5dm/constants/images.dart';
 import 'package:app5dm/providers/testProvider.dart';
 import 'package:app5dm/widgets/index.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
@@ -14,14 +13,11 @@ class DemoPage extends StatefulWidget {
 
 class _DemoPageState extends State<DemoPage>
     with TickerProviderStateMixin {
-  TabController _tabController;
-  ScrollController _sc = ScrollController();
 
   double pinHeight = playerHeight;
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -51,6 +47,7 @@ class _DemoPageState extends State<DemoPage>
               TestModel _model = Provider.of<TestModel>(ctx, listen: false);
               print('builf');
               print(pinHeight);
+              var height = pin4Height;
               return NestedScrollView(
                 controller: _model.sc,
                 dragStartBehavior: DragStartBehavior.start,
@@ -60,7 +57,7 @@ class _DemoPageState extends State<DemoPage>
                   ];
                 },
                 pinnedHeaderSliverHeightBuilder: () {
-                  return pinHeight;
+                  return height;
                 },
                 innerScrollPositionKeyBuilder: () {
                   return Key('tab1');
@@ -119,10 +116,8 @@ class TabItem extends StatefulWidget {
 
 class _TabItemState extends State<TabItem> with AutomaticKeepAliveClientMixin {
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 
-  ScrollController _sc = ScrollController();
 
   @override
   Widget build(BuildContext context) {

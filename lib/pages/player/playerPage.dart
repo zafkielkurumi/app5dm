@@ -1,16 +1,16 @@
+import 'dart:async';
+
 import 'package:app5dm/constants/config.dart';
-import 'package:app5dm/providers/baseProvider.dart';
 import 'package:app5dm/providers/playerProvider.dart';
 import 'package:app5dm/utils/index.dart';
-import 'package:app5dm/widgets/playerUi/IjkStatusWidgets.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:app5dm/widgets/index.dart';
 import 'package:flutter/material.dart' hide NestedScrollView;
 import 'package:ff_annotation_route/ff_annotation_route.dart';
+import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 import 'package:provider/provider.dart';
 
 import 'brief.dart';
-import 'fullController.dart';
 import 'playerHeader.dart';
 
 @FFRoute(
@@ -30,98 +30,90 @@ class PlayerPage extends StatefulWidget {
 class _PlayerPageState extends State<PlayerPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+  ScrollController _sc = ScrollController();
+  double pinHeight = playerHeight;
+  IjkMediaController playController = IjkMediaController();
+  StreamSubscription _videoSteam;
+  bool _isPlaying = true;
 
   @override
   void initState() {
     _tabController = TabController(length: 1, vsync: this);
+    initListener();
     super.initState();
   }
 
-  SliverPersistentHeader buildPlayerHeader(PlayerModel model) {
-    return SliverPersistentHeader(
-    floating: true,
-    delegate: CustomSliverPersistentHeader(
-        child: Selector<PlayerModel, ViewState>(
-          selector: (_, playerModel) => playerModel.viewState,
-          child: Player(
-            controller: model.playerController,
-            noSourcePic: model.noSourcePic,
-            fullControllerWidget: (tip, mediaController) {
-              return FullController(
-                controller: mediaController,
-                info: mediaController.videoInfo,
-                tipHelper: tip,
-                playerModel: model,
-              );
-            },
-          ),
-          builder: (_, viewState, player) {
-            return Stack(
-              children: <Widget>[
-                player,
-                viewState == ViewState.pending
-                    ? PreparingView()
-                    : SizedBox.shrink()
-              ],
-            );
-          },
-        ),
-        minHeigth: playerHeight),
-  );
+  initListener() {
+    _videoSteam = playController.videoInfoStream.listen((info) {
+      if (info != null && _isPlaying != info.isPlaying && mounted) {
+         _isPlaying = info.isPlaying;
+          pinHeight = _isPlaying ? playerHeight : kToolbarHeight;
+          setState(() {});
+      }
+    });
   }
+
+  @override
+  void dispose() {
+    _videoSteam?.cancel();
+    _tabController.dispose();
+    playController.dispose();
+    _sc.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ChangeNotifierProvider(
-        create: (_) =>
-            PlayerModel(link: widget.link, noSourcePic: widget.picUrl),
-        child: Selector<PlayerModel, PlayerModel>(
-          selector: (_, playerModel) => playerModel,
-          child: PlayerHeader(),
-          builder: (ctx, playerModel, child) {
-            PlayerModel _model = Provider.of<PlayerModel>(ctx, listen: false);
-            print('build');
-            return NestedScrollView(
-              controller: _model.scrollController,
-              headerSliverBuilder: (c, b) {
-                return [buildPlayerHeader(_model)];
-              },
-              pinnedHeaderSliverHeightBuilder: () {
-                return playerModel.pinHeight;
-              },
-              innerScrollPositionKeyBuilder: () =>
-                  Key('tab${_tabController.index}'),
-              body: ViewWidget<PlayerModel>(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: double.infinity,
-                      alignment: Alignment.centerLeft,
-                      decoration: BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(width: 1, color: Colors.grey[200]),
-                        ),
-                      ),
-                      child: PlayerTabBar(tabController: _tabController),
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        controller: _tabController,
-                        children: [
-                          NestedScrollViewInnerScrollPositionKeyWidget(
-                            Key('tab0'),
-                            Brief(),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+        create: (_) => PlayerModel(
+            link: widget.link,
+            noSourcePic: widget.picUrl,
+            scrollController: _sc,
+            playController: playController),
+        child: NestedScrollView(
+          controller: _sc,
+          headerSliverBuilder: (c, b) {
+            return [
+              PlayerHeader(
+                playController: playController,
+              )
+            ];
           },
+          pinnedHeaderSliverHeightBuilder: () {
+            return pinHeight;
+          },
+          innerScrollPositionKeyBuilder: () =>
+              Key('tab${_tabController.index}'),
+          body: ViewWidget<PlayerModel>(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.centerLeft,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 1, color: Colors.grey[200]),
+                    ),
+                  ),
+                  child: PlayerTabBar(tabController: _tabController),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      NestedScrollViewInnerScrollPositionKeyWidget(
+                        Key('tab0'),
+                        Brief(),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
