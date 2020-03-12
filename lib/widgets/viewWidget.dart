@@ -16,11 +16,15 @@ class ViewWidget<T extends BaseProvider> extends StatelessWidget {
       builder: (c, viewstate, child) {
         switch (viewstate) {
           case ViewState.content:
-          case ViewState.pending: return child;
-          case ViewState.error: return ErrorView<T>();
-          case ViewState.unAuth: return UnAuthView<T>();
+          case ViewState.pending:
+            return child;
+          case ViewState.error:
+            return ErrorView<T>();
+          case ViewState.unAuth:
+            return UnAuthView<T>();
           case ViewState.first:
-          default: return skelelon == null ? SkeletonList() : skelelon;
+          default:
+            return skelelon == null ? SkeletonList() : skelelon;
         }
       },
       selector: (c, view) => view.viewState,
@@ -29,34 +33,54 @@ class ViewWidget<T extends BaseProvider> extends StatelessWidget {
   }
 }
 
-class ErrorView<T extends BaseProvider>  extends StatelessWidget {
+class ErrorView<T extends BaseProvider> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: OutlineButton(onPressed: Provider.of<T>(context,listen: false).retry, child: Text('重试'),),
+    var model = Provider.of<T>(context, listen: false);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text('${model.errorMessage}'),
+        SizedBox(height: 10,),
+        OutlineButton(
+          onPressed: model.retry,
+          child: Text('重试'),
+        )
+      ],
     );
   }
 }
 
-class UnAuthView<T extends BaseProvider>  extends StatelessWidget {
+class UnAuthView<T extends BaseProvider> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Hero(tag: 'logo', child: Image.asset(Images.logo,)),
-        SizedBox(height: Screen.setHeight(20),),
-        Text('未登录'),
-        SizedBox(height: Screen.setHeight(250),),
-        OutlineButton(onPressed: () async {
-          var res = await Navigator.of(context).pushNamed(Routes.LOGINPAGE);
-          if (res == true) {
-            Provider.of<T>(context,listen: false).retry();
-          }
-        }, child: Text('登录'),),
-      ],
-    ),
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Hero(
+              tag: 'logo',
+              child: Image.asset(
+                Images.logo,
+              )),
+          SizedBox(
+            height: Screen.setHeight(20),
+          ),
+          Text('未登录'),
+          SizedBox(
+            height: Screen.setHeight(250),
+          ),
+          OutlineButton(
+            onPressed: () async {
+              var res = await Navigator.of(context).pushNamed(Routes.LOGINPAGE);
+              if (res == true) {
+                Provider.of<T>(context, listen: false).retry();
+              }
+            },
+            child: Text('登录'),
+          ),
+        ],
+      ),
     );
   }
 }

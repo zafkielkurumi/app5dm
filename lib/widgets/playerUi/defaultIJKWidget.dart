@@ -173,17 +173,7 @@ class _DefaultIJKWidgetState extends State<DefaultIJKWidget>
 
   }
 
-  _wrapOnDragStart() {
-    return fullScreen ? onVerticalDragStart : onHorizontalDragStart;
-  }
-
-  _wrapOnDragUpdate() {
-    return fullScreen ? onVerticalDragUpdate : onHorizontalDragUpdate;
-  }
-
-  _wrapOnDragEnd() {
-    return fullScreen ? onVerticalDragEnd : onHorizontalDragEnd;
-  }
+ 
   
 
   @override

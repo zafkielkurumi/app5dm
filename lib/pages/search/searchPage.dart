@@ -1,4 +1,3 @@
-import 'package:app5dm/app5dm_route.dart' hide PageRouteType;
 import 'package:app5dm/utils/index.dart';
 import 'package:flutter/material.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';

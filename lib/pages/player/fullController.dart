@@ -160,8 +160,7 @@ class FullFooter extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10),
             child: GestureDetector(
-              onTap: () {
-              },
+              onTap: () {},
               child: Text(
                 '倍速',
                 style: TextStyle(color: Colors.white),
@@ -169,13 +168,16 @@ class FullFooter extends StatelessWidget {
             ),
           ),
           IconButton(
-              icon: Icon(
-                Icons.fullscreen_exit,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              })
+            icon: Icon(
+              Icons.fullscreen_exit,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              await SystemChrome.setPreferredOrientations(
+                  [DeviceOrientation.portraitUp]);
+              Navigator.of(context).pop();
+            },
+          )
         ],
       ),
     );
@@ -203,12 +205,17 @@ class FullHeader extends StatelessWidget {
               Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back,
               color: Colors.white,
             ),
-            onPressed: () {
+            onPressed: () async {
+              await SystemChrome.setPreferredOrientations(
+                  [DeviceOrientation.portraitUp]);
               Navigator.of(context).pop();
             },
           ),
           Expanded(
-            child: Text('第${playerModel.findLinkIndex() + 1}话', style: TextStyle(color: Colors.white),),
+            child: Text(
+              '第${playerModel.findLinkIndex() + 1}话',
+              style: TextStyle(color: Colors.white),
+            ),
           )
         ],
       ),

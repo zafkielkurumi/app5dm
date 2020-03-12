@@ -26,7 +26,7 @@ class _BriefState extends State<Brief> with AutomaticKeepAliveClientMixin {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Selector<PlayerModel, String>(
-              selector: (_, playerModel) => playerModel.videoDetail?.videoTitle,
+              selector: (_, playerModel) => playerModel.videoDetail.videoTitle,
               builder: (_, videoTitle, c) {
                 return Text(videoTitle);
               },
@@ -53,7 +53,7 @@ class _BriefState extends State<Brief> with AutomaticKeepAliveClientMixin {
               }),
             );
           },
-        )
+        ),
       ],
     );
   }

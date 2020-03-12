@@ -5,7 +5,6 @@ import 'package:app5dm/widgets/playerUi/CustomProgressBar.dart';
 import 'package:app5dm/widgets/playerUi/fullScreen.dart';
 import 'package:app5dm/widgets/playerUi/tip.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 
 typedef Widget FullControllerWidget(

@@ -12,16 +12,9 @@ import 'pages/player/playerPage.dart';
 import 'pages/search/searchPage.dart';
 import 'pages/search/searchResultPage.dart';
 import 'pages/splashPage.dart';
-import 'pages/test/testPage.dart';
 
 RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
   switch (name) {
-    case "/TestPage":
-      return RouteResult(
-        widget: TestPage(),
-        showStatusBar: true,
-        routeName: "TestPage",
-      );
     case "/loginPage":
       return RouteResult(
         widget: LoginPage(),
@@ -104,13 +97,6 @@ enum PageRouteType { material, cupertino, transparent }
 
 class Routes {
   const Routes._();
-
-  /// TestPage
-  ///
-  /// [name] : /TestPage
-  /// [routeName] : TestPage
-  /// [showStatusBar] : true
-  static const String TESTPAGE = "/TestPage";
 
   /// loginPage
   ///

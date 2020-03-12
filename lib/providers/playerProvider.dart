@@ -1,13 +1,16 @@
-import 'package:app5dm/constants/config.dart';
+import 'dart:async';
 import 'package:app5dm/models/index.dart';
 import 'package:app5dm/providers/baseProvider.dart';
 import 'package:app5dm/apis/index.dart';
-import 'package:app5dm/utils/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 
 class PlayerModel extends BaseProvider {
-  PlayerModel({@required String link, String noSourcePic}) {
+  PlayerModel({
+    @required String link,
+    @required this.playController,
+    String noSourcePic,
+  }) {
     _noSourcePic = noSourcePic;
     var url = link + '?link=0';
     getData(url);
@@ -22,18 +25,8 @@ class PlayerModel extends BaseProvider {
   String _link = '';
   String get link => _link;
 
-  IjkMediaController _playerController = IjkMediaController();
-  IjkMediaController get playerController => _playerController;
+  IjkMediaController playController;
 
-  ScrollController _scrollController = ScrollController();
-  ScrollController get scrollController => _scrollController;
-
-  // num _height = Screen.setHeight(450);
-  double _pinHeight = playerHeight;
-  double get pinHeight => _pinHeight;
-
-  bool _isShowTitle = false;
-  bool get isShowTitle => _isShowTitle;
 
   Future getData(String link) async {
     _link = link;
@@ -41,7 +34,7 @@ class PlayerModel extends BaseProvider {
       VideoDetail detail = await VideoDetailApi.getVideoDetail(link);
       if (detail != null) {
         _videoDetail = detail;
-        playerController.setNetworkDataSource(detail.videoSrc);
+        playController.setNetworkDataSource(detail.videoSrc, autoPlay: true);
         setContent();
       } else {
         setUnAuth();
@@ -51,49 +44,52 @@ class PlayerModel extends BaseProvider {
     }
   }
 
+  ///
   void changeLink(String link) {
     setPending();
     getData(link);
   }
 
+  /// 下一集
   nextSeason() {
-     setPending();
-     var url = findLink();
-     if (url.isNotEmpty) {
-       getData(url);
-     } else {
-       setContent();
-     }
+    setPending();
+    var url = findLink();
+    if (url.isNotEmpty) {
+      getData(url);
+    } else {
+      setContent();
+    }
   }
 
   Sources findSource() {
     for (var source in videoDetail.sources) {
-        var index = source.links.indexWhere((r) => r.link == link);
-        if(index > -1) {
-          return source;
-        }
-     }
-     return null;
+      var index = source.links.indexWhere((r) => r.link == link);
+      if (index > -1) {
+        return source;
+      }
+    }
+    return null;
   }
 
+  /// 查找第几话
   int findLinkIndex() {
-     for (var source in videoDetail.sources) {
-        var index = source.links.indexWhere((r) => r.link == link);
-        if(index > -1) {
-          return index;
-        }
-     }
-     return -1;
+    for (var source in videoDetail.sources) {
+      var index = source.links.indexWhere((r) => r.link == link);
+      if (index > -1) {
+        return index;
+      }
+    }
+    return -1;
   }
 
   String findLink() {
     for (var source in videoDetail.sources) {
-        var index = source.links.indexWhere((r) => r.link == link);
-        if(index > -1 && index < source.links.length) {
-          return source.links[index + 1].link;
-        }
-     }
-     return '';
+      var index = source.links.indexWhere((r) => r.link == link);
+      if (index > -1 && index < source.links.length) {
+        return source.links[index + 1].link;
+      }
+    }
+    return '';
   }
 
   // void setOptions() {
@@ -103,31 +99,7 @@ class PlayerModel extends BaseProvider {
   //   );
   // }
 
-  changePausePinHeight() {
-    _pinHeight = kToolbarHeight;
-    scrollController.position.applyContentDimensions(
-        scrollController.position.minScrollExtent,
-        scrollController.position.maxScrollExtent + _pinHeight);
-  }
 
-  offsetListener() {
-    if (scrollController.offset > Screen.setHeight(300) && !_isShowTitle) {
-      _isShowTitle = true;
-      setContent();
-    } else if (scrollController.offset < Screen.setHeight(300) &&
-        _isShowTitle) {
-      _isShowTitle = false;
-      setContent();
-    }
-  }
-
-  initScroll() {
-    scrollController.addListener(offsetListener);
-  }
-
-  removeLis() {
-    scrollController.removeListener(offsetListener);
-  }
 
   @override
   retry() {
@@ -137,8 +109,6 @@ class PlayerModel extends BaseProvider {
 
   @override
   void dispose() {
-    playerController?.dispose();
-    scrollController?.dispose();
     super.dispose();
   }
 }
