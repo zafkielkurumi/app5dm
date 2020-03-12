@@ -1,10 +1,7 @@
 import 'dart:async';
-
-import 'package:app5dm/constants/config.dart';
 import 'package:app5dm/models/index.dart';
 import 'package:app5dm/providers/baseProvider.dart';
 import 'package:app5dm/apis/index.dart';
-import 'package:app5dm/utils/index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 
@@ -12,7 +9,6 @@ class PlayerModel extends BaseProvider {
   PlayerModel({
     @required String link,
     @required this.playController,
-    @required this.scrollController,
     String noSourcePic,
   }) {
     _noSourcePic = noSourcePic;
@@ -29,14 +25,7 @@ class PlayerModel extends BaseProvider {
   String _link = '';
   String get link => _link;
 
-  double _pinHeight = playerHeight;
-  double get pinHeight => _pinHeight;
-
-  bool _isShowTitle = false;
-  bool get isShowTitle => _isShowTitle;
-
   IjkMediaController playController;
-  ScrollController scrollController;
 
 
   Future getData(String link) async {
@@ -110,20 +99,7 @@ class PlayerModel extends BaseProvider {
   //   );
   // }
 
-  offsetListener() {
-    if (scrollController.offset > Screen.setHeight(300) && !_isShowTitle) {
-      _isShowTitle = true;
-      setContent();
-    } else if (scrollController.offset < Screen.setHeight(300) &&
-        _isShowTitle) {
-      _isShowTitle = false;
-      setContent();
-    }
-  }
 
-  initListener() {
-    scrollController.addListener(offsetListener);
-  }
 
   @override
   retry() {

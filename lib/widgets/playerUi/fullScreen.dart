@@ -30,7 +30,8 @@ class _PlayerFullScreenState extends State<PlayerFullScreen> {
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+   SystemChrome.setPreferredOrientations(
+                  [DeviceOrientation.portraitUp]);
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     // Wakelock.toggle(on: false);
     super.dispose();

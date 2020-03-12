@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:app5dm/constants/config.dart';
 import 'package:app5dm/providers/playerProvider.dart';
@@ -34,7 +35,12 @@ class _PlayerPageState extends State<PlayerPage>
   double pinHeight = playerHeight;
   IjkMediaController playController = IjkMediaController();
   StreamSubscription _videoSteam;
+  bool _isShowTitle = false;
   bool _isPlaying = true;
+  double _opacity = 0;
+  double _maxHeight = playerHeight;
+  double scOffset = 0;
+  double isShowHeight = 95;
 
   @override
   void initState() {
@@ -44,12 +50,28 @@ class _PlayerPageState extends State<PlayerPage>
   }
 
   initListener() {
+    _sc.addListener(offsetListener);
     _videoSteam = playController.videoInfoStream.listen((info) {
-      if (info != null && _isPlaying != info.isPlaying && mounted) {
-         _isPlaying = info.isPlaying;
-          pinHeight = _isPlaying ? playerHeight : kToolbarHeight;
-          setState(() {});
+      if (info.hasData && _isPlaying != info.isPlaying && mounted) {
+        _isPlaying = info.isPlaying;
+        pinHeight = _isPlaying ? playerHeight : kToolbarHeight;
+        setState(() {});
       }
+    });
+  }
+
+  offsetListener() {
+    if ((_maxHeight - _sc.offset) < isShowHeight && !_isShowTitle) {
+      _isShowTitle = true;
+      _opacity = 1;
+      setState(() {});
+    } else if ((_maxHeight - _sc.offset) > isShowHeight && _isShowTitle) {
+      _opacity = 0;
+      _isShowTitle = false;
+      setState(() {});
+    }
+    setState(() {
+      scOffset = _sc.offset;
     });
   }
 
@@ -58,10 +80,10 @@ class _PlayerPageState extends State<PlayerPage>
     _videoSteam?.cancel();
     _tabController.dispose();
     playController.dispose();
+    _sc.removeListener(offsetListener);
     _sc.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -70,50 +92,100 @@ class _PlayerPageState extends State<PlayerPage>
         create: (_) => PlayerModel(
             link: widget.link,
             noSourcePic: widget.picUrl,
-            scrollController: _sc,
             playController: playController),
-        child: NestedScrollView(
-          controller: _sc,
-          headerSliverBuilder: (c, b) {
-            return [
-              PlayerHeader(
-                playController: playController,
-              )
-            ];
-          },
-          pinnedHeaderSliverHeightBuilder: () {
-            return pinHeight;
-          },
-          innerScrollPositionKeyBuilder: () =>
-              Key('tab${_tabController.index}'),
-          body: ViewWidget<PlayerModel>(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.centerLeft,
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: BorderSide(width: 1, color: Colors.grey[200]),
+        child: Stack(
+          children: <Widget>[
+            NestedScrollView(
+              controller: _sc,
+              headerSliverBuilder: (c, b) {
+                return [
+                  PlayerHeader(
+                    playController: playController,
+                  )
+                ];
+              },
+              pinnedHeaderSliverHeightBuilder: () {
+                return pinHeight;
+              },
+              innerScrollPositionKeyBuilder: () =>
+                  Key('tab${_tabController.index}'),
+              body: ViewWidget<PlayerModel>(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      width: double.infinity,
+                      alignment: Alignment.centerLeft,
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(width: 1, color: Colors.grey[200]),
+                        ),
+                      ),
+                      child: PlayerTabBar(tabController: _tabController),
                     ),
-                  ),
-                  child: PlayerTabBar(tabController: _tabController),
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          NestedScrollViewInnerScrollPositionKeyWidget(
+                            Key('tab0'),
+                            Brief(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-                Expanded(
-                  child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      NestedScrollViewInnerScrollPositionKeyWidget(
-                        Key('tab0'),
-                        Brief(),
+              ),
+            ),
+            IgnorePointer(
+              child: AnimatedOpacity(
+                duration: Duration(milliseconds: 500),
+                opacity: _opacity,
+                child: Container(
+                  color: Theme.of(context).primaryColor,
+                  height: _maxHeight - scOffset,
+                ),
+              ),
+            ),
+            if (_isShowTitle)
+              Container(
+                  height: kToolbarHeight,
+                  child: Row(
+                    children: <Widget>[
+                      IconButton(
+                          icon: Icon(
+                            Platform.isAndroid
+                                ? Icons.arrow_back
+                                : Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
+                      Expanded(
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            playController.play();
+                          },
+                          child: Center(
+                            child: Text(
+                              '立即播放',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: Screen.setSp(40)),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 48,
+                        width: 48,
                       ),
                     ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+                  ))
+          ],
         ),
       ),
     );

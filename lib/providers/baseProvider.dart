@@ -1,4 +1,5 @@
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -19,6 +20,7 @@ getFunction(BuildContext context, T) {
  class BaseProvider extends ChangeNotifier {
   ViewState _viewState = ViewState.first;
   bool _dispose = false;
+  String errorMessage = '';
 
   ViewState get viewState => _viewState;
   set viewState(value) {
@@ -55,6 +57,12 @@ getFunction(BuildContext context, T) {
   onError( e) {
      if (viewState == ViewState.first) {
        debugPrint(e.toString());
+        if (e.type  == DioErrorType.RESPONSE && e.response.statusCode == 503) {
+          errorMessage = '503问题，暂未解决';
+        }
+        if (e.type == DioErrorType.CONNECT_TIMEOUT || e.type == DioErrorType.RECEIVE_TIMEOUT) {
+           errorMessage = '网络连接超时';
+        }
         setError();
       }
   }

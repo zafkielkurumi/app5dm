@@ -2,14 +2,28 @@ import 'package:app5dm/utils/index.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
+import 'package:flutter/cupertino.dart';
 
 
-class PreparingView extends StatefulWidget {
+class PreparingView extends StatelessWidget {
   @override
-  _PreparingViewState createState() => _PreparingViewState();
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(
+        child: CupertinoActivityIndicator(
+          radius: 30,
+        ),
+      ) ,
+    );
+  }
 }
 
-class _PreparingViewState extends State<PreparingView>
+class PreparingWidget extends StatefulWidget {
+  @override
+  _PreparingWidgetState createState() => _PreparingWidgetState();
+}
+
+class _PreparingWidgetState extends State<PreparingWidget>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> animation;
@@ -111,7 +125,7 @@ class ErrorView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('出错了...'),
+      child: Text('出错了...', style: TextStyle(color: Colors.white),),
     );
   }
 }
