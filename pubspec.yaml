@@ -35,14 +35,14 @@ dependencies:
   flutter_swiper: 1.1.6
   # flutter_webview_plugin: 0.3.10+1
   hive: 1.4.0+1
-  loading_more_list: 1.0.5
+  # loading_more_list: 1.0.5
   oktoast: 2.3.1
   provider: 4.0.2
   pull_to_refresh_notification: 0.3.4
   html: 0.14.0+3
   shimmer: 1.0.1 # 闪亮
   sensors: 0.4.1+8 # 感应
-  wakelock: 0.1.3+4
+  aeyrium_sensor: 1.0.7
   
   
   

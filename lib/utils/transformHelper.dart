@@ -4,8 +4,6 @@ import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
 import 'package:app5dm/constants/config.dart';
 
-import 'package:flutter/services.dart';
-// import 'package:flutter_liquidcore/liquidcore.dart';
 
 Future<String> transformIframe({String iframeUrl}) async {
   var res = await NetUtil.dio.get(iframeUrl);
@@ -124,14 +122,24 @@ Future<VideoDetail> tranferDetail(String html) async {
     List<Element> aLinks = tr.querySelectorAll('a');
     List<Links> links = [];
     aLinks.forEach((aLink) {
-      links.add(Links(title: aLink.text, link: aLink.attributes['href']));
+      links.add(Links(title: aLink.text, url: aLink.attributes['href']));
     });
     sources.add(Sources(links: links, sourceTitle: sourceTitle));
   });
   return VideoDetail(
     sources: sources,
     videoSrc: videoSrc,
-    videoTitle: videoTitle,
+    title: videoTitle,
     brief: brief
   );
 }
+
+bool checkIsLogin(String html) {
+  Document document = parse(html);
+  Element awsl = document.getElementById('awsl');
+  if (awsl != null && awsl.innerHtml.isNotEmpty) {
+    return true;
+  }
+  return false;
+}
+

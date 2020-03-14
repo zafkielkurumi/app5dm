@@ -162,11 +162,12 @@ class _DefaultIJKWidgetState extends State<DefaultIJKWidget>
   }
 
   onVerticalDragStart(DragStartDetails startDetails) {
-
+    debugPrint('startDetails.globalPosition');
+    debugPrint(startDetails.globalPosition.toString());
   }
 
   onVerticalDragUpdate(DragUpdateDetails updateDetails) {
-
+      // print(up)
   }
 
   onVerticalDragEnd(DragEndDetails endDetails) {

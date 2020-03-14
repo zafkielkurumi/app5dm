@@ -58,7 +58,6 @@ class RouteLayoutDelegate extends SingleChildLayoutDelegate {
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
-    print(constraints.maxWidth);
     return BoxConstraints(
       minWidth: 0.0,
       maxWidth: constraints.maxWidth,

@@ -25,11 +25,22 @@ class PlayerModel extends BaseProvider {
   String _link = '';
   String get link => _link;
 
+  bool _isShowSheet = false;
+  bool get isShowSheet => _isShowSheet;
+
+
   IjkMediaController playController;
+
+  // 仅实现第一个sources
+  ScrollController briefSc =ScrollController(); //
+
+   List<Links> _links = [];
+  List<Links>  get links => _links;
 
 
   Future getData(String link) async {
     _link = link;
+    // briefSc.jumpTo(value)
     try {
       VideoDetail detail = await VideoDetailApi.getVideoDetail(link);
       if (detail != null) {
@@ -61,20 +72,20 @@ class PlayerModel extends BaseProvider {
     }
   }
 
-  Sources findSource() {
+  List<Links> findLinks() {
     for (var source in videoDetail.sources) {
-      var index = source.links.indexWhere((r) => r.link == link);
+      var index = source.links.indexWhere((r) => r.url == link);
       if (index > -1) {
-        return source;
+        return source.links;
       }
     }
-    return null;
+    return [];
   }
 
   /// 查找第几话
   int findLinkIndex() {
     for (var source in videoDetail.sources) {
-      var index = source.links.indexWhere((r) => r.link == link);
+      var index = source.links.indexWhere((r) => r.url == link);
       if (index > -1) {
         return index;
       }
@@ -84,12 +95,20 @@ class PlayerModel extends BaseProvider {
 
   String findLink() {
     for (var source in videoDetail.sources) {
-      var index = source.links.indexWhere((r) => r.link == link);
+      var index = source.links.indexWhere((r) => r.url == link);
       if (index > -1 && index < source.links.length) {
-        return source.links[index + 1].link;
+        return source.links[index + 1].url;
       }
     }
     return '';
+  }
+
+  showModelSheet() {
+    if (!_isShowSheet) {
+       _links = findLinks();
+    }
+    _isShowSheet = !_isShowSheet;
+    notifyListeners();
   }
 
   // void setOptions() {

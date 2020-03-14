@@ -70,7 +70,12 @@ class _MyAppState extends State<MyApp> {
                     statusBarColor: themeModel.themeColor,
                     statusBarBrightness: themeModel.brightness,
                   ),
-                  child: SafeArea(child: w)),
+                  child: OrientationBuilder(builder: (_, orientaion) {
+                    return SafeArea(
+                        bottom: orientaion == Orientation.portrait,
+                        top: orientaion == Orientation.portrait,
+                        child: w);
+                  })),
             );
           },
           // home: IndexPage(),

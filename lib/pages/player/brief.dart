@@ -1,5 +1,6 @@
 import 'package:app5dm/models/index.dart';
 import 'package:app5dm/providers/playerProvider.dart';
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,42 +20,51 @@ class _BriefState extends State<Brief> with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ListView(
-      padding: EdgeInsets.symmetric(horizontal: 5),
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Selector<PlayerModel, String>(
-              selector: (_, playerModel) => playerModel.videoDetail.videoTitle,
-              builder: (_, videoTitle, c) {
-                return Text(videoTitle);
-              },
-            ),
-            IconButton(icon: Icon(Icons.favorite_border), onPressed: null)
-          ],
-        ),
-        Selector<PlayerModel, String>(
-          selector: (_, playerModel) => playerModel.videoDetail.brief,
-          builder: (_, brief, c) {
-            return Text(brief);
-          },
-        ),
-        Selector<PlayerModel, List<Sources>>(
-          selector: (_, playerModel) => playerModel.videoDetail.sources,
-          shouldRebuild: (prev, next) => false,
-          builder: (_, sources, c) {
-            return Column(
-              children: List.generate(sources.length, (index) {
-                Sources source = sources[index];
-                return Container(
-                  child: SourceWidget(source: source),
-                );
-              }),
-            );
-          },
-        ),
-      ],
+    return NestedScrollViewInnerScrollPositionKeyWidget(
+      Key('tab0'),
+      ListView(
+        padding: EdgeInsets.symmetric(horizontal: 5),
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                  child: Selector<PlayerModel, String>(
+                selector: (_, playerModel) =>
+                    playerModel.videoDetail.title,
+                builder: (_, videoTitle, c) {
+                  return Text(
+                    videoTitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  );
+                },
+              )),
+              IconButton(icon: Icon(Icons.favorite_border), onPressed: null)
+            ],
+          ),
+          Selector<PlayerModel, String>(
+            selector: (_, playerModel) => playerModel.videoDetail.brief,
+            builder: (_, brief, c) {
+              return Text(brief);
+            },
+          ),
+          Selector<PlayerModel, List<Sources>>(
+            selector: (_, playerModel) => playerModel.videoDetail.sources,
+            shouldRebuild: (prev, next) => false,
+            builder: (_, sources, c) {
+              return Column(
+                children: List.generate(sources.length, (index) {
+                  Sources source = sources[index];
+                  return Container(
+                    child: SourceWidget(source: source),
+                  );
+                }),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -72,7 +82,9 @@ class SourceWidget extends StatelessWidget {
     return Column(
       children: <Widget>[
         InkWell(
-          onTap: () {},
+          onTap: () {
+            Provider.of<PlayerModel>(context, listen: false).showModelSheet();
+          },
           child: Padding(
               padding: EdgeInsets.symmetric(vertical: 5),
               child: Row(
@@ -89,8 +101,10 @@ class SourceWidget extends StatelessWidget {
               )),
         ),
         Container(
-          height: 30,
+          height: 50,
+          padding: EdgeInsets.symmetric(vertical: 5),
           child: ListView.builder(
+            // controller: briefSc, todo
               scrollDirection: Axis.horizontal,
               itemCount: source.links.length,
               itemBuilder: (ctx, index) {
@@ -110,18 +124,26 @@ class SourceWidget extends StatelessWidget {
     );
   }
 
-  OutlineButton buildOutlineButton(BuildContext context, Links link, String currentlink) {
-    return currentlink == link.link ? OutlineButton(
-      borderSide: BorderSide(color: Theme.of(context).primaryColor),
-      onPressed: () {
-        Provider.of<PlayerModel>(context, listen: false).changeLink(link.link);
-      },
-      child: Text(link.title) ,
-    ) : OutlineButton(
-      onPressed: () {
-        Provider.of<PlayerModel>(context, listen: false).changeLink(link.link);
-      },
-      child: Text(link.title, style: TextStyle(color: Colors.black45),) ,
-    ) ;
+  OutlineButton buildOutlineButton(
+      BuildContext context, Links link, String currentlink) {
+    return currentlink == link.url
+        ? OutlineButton(
+            borderSide: BorderSide(color: Theme.of(context).primaryColor),
+            onPressed: () {
+              Provider.of<PlayerModel>(context, listen: false)
+                  .changeLink(link.url);
+            },
+            child: Text(link.title),
+          )
+        : OutlineButton(
+            onPressed: () {
+              Provider.of<PlayerModel>(context, listen: false)
+                  .changeLink(link.url);
+            },
+            child: Text(
+              link.title,
+              style: TextStyle(color: Colors.black45),
+            ),
+          );
   }
 }

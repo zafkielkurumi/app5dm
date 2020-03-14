@@ -14,8 +14,3 @@ class VideoDetailApi {
   }
 }
 
-bool checkIsLogin(String html) {
-  // Document document = parse(html);
-  return html.contains('404!');
-}
-

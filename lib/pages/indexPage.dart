@@ -32,7 +32,7 @@ class _IndexPageState extends State<IndexPage> {
     if (currentBackPressTime == null ||
         now.difference(currentBackPressTime) > Duration(seconds: 2)) {
       currentBackPressTime = now;
-      showToast('双击退出');
+      showToast('再按一次退出');
       return Future.value(false);
     }
     return Future.value(true);

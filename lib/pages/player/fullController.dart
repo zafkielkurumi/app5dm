@@ -228,7 +228,7 @@ class _SelectSeason extends StatelessWidget {
   _SelectSeason(this.playerModel);
   @override
   Widget build(BuildContext context) {
-    var source = playerModel.findSource();
+    var links = playerModel.findLinks();
     return Material(
       color: Colors.transparent,
       child: Container(
@@ -241,18 +241,18 @@ class _SelectSeason extends StatelessWidget {
           child: Wrap(
             spacing: 10,
             children: List.generate(
-              source.links.length,
+              links.length,
               (index) {
-                var link = source.links[index];
+                var link = links[index];
                 return Container(
                   width: 50,
                   child: OutlineButton(
                     borderSide: BorderSide(
-                        color: playerModel.link == link.link
+                        color: playerModel.link == link.url
                             ? Theme.of(context).primaryColor
                             : Colors.white),
                     onPressed: () {
-                      playerModel.getData(link.link);
+                      playerModel.getData(link.url);
                       Navigator.of(context).pop();
                     },
                     child: Text(

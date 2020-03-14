@@ -2,13 +2,13 @@ import 'dart:convert' show json;
 import './protect.dart';
 
 class VideoDetail {
-  String videoTitle;
+  String title;
   String brief;
   String videoSrc;
   List<Sources> sources;
 
   VideoDetail({
-    this.videoTitle,
+    this.title,
     this.brief,
     this.videoSrc,
     this.sources,
@@ -28,8 +28,8 @@ class VideoDetail {
       }
     }
     return VideoDetail(
-      videoTitle: convertValueByType(jsonRes['videoTitle'], String,
-          stack: "VideoDetail-videoTitle"),
+      title: convertValueByType(jsonRes['title'], String,
+          stack: "VideoDetail-title"),
       brief: convertValueByType(jsonRes['brief'], String,
           stack: "VideoDetail-brief"),
       videoSrc: convertValueByType(jsonRes['videoSrc'], String,
@@ -39,7 +39,7 @@ class VideoDetail {
   }
 
   Map<String, dynamic> toJson() => {
-        'videoTitle': videoTitle,
+        'videoTitle': title,
         'brief': brief,
         'videoSrc': videoSrc,
         'sources': sources,
@@ -91,11 +91,11 @@ class Sources {
 
 class Links {
   String title;
-  String link;
+  String url;
 
   Links({
     this.title,
-    this.link,
+    this.url,
   });
 
   factory Links.fromJson(jsonRes) => jsonRes == null
@@ -103,13 +103,13 @@ class Links {
       : Links(
           title: convertValueByType(jsonRes['title'], String,
               stack: "Links-title"),
-          link:
-              convertValueByType(jsonRes['link'], String, stack: "Links-link"),
+          url:
+              convertValueByType(jsonRes['link'], String, stack: "Links-url"),
         );
 
   Map<String, dynamic> toJson() => {
         'title': title,
-        'link': link,
+        'link': url,
       };
   @override
   String toString() {
@@ -118,7 +118,7 @@ class Links {
 }
 
 // {
-//  "videoTitle": "33",
+//  "title": "33",
 // "brief":"55",
 // "videoSrc": "fff",
 // "sources":[
@@ -127,7 +127,7 @@ class Links {
 // "links": [
 //  {
 //  "title":"4",
-// "link":"55"
+// "uel":"55"
 // }
 // ]
 // }
