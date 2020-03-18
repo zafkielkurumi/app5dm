@@ -17,7 +17,6 @@ class PlayerFullScreen extends StatefulWidget {
 
 class _PlayerFullScreenState extends State<PlayerFullScreen> {
   StreamSubscription accelerometer;
-  double _angle = 0;
   /// false为left。 ture为right
   bool landscapeLeftOrRight = false;
   @override
@@ -48,14 +47,11 @@ class _PlayerFullScreenState extends State<PlayerFullScreen> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        child: Transform.rotate(
-          angle: _angle,
-          child: Player(
+        child: Player(
             controller: widget.controller,
             fullScreen: true,
             fullControllerWidget: widget.fullControllerWidget,
           ),
-        ),
         onWillPop: () async {
           await SystemChrome.setPreferredOrientations(
               [DeviceOrientation.portraitUp]);
