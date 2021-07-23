@@ -8,6 +8,7 @@ import 'package:oktoast/oktoast.dart';
 
 class NetUtil {
   static final Dio dio = new Dio(BaseOptions(
+    // baseUrl: kReleaseMode ? '' : '',
     // baseUrl: "https://www.5dm.tv/",
     connectTimeout: 15000,
     receiveTimeout: 15000,

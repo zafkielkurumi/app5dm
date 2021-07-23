@@ -15,60 +15,68 @@ import 'pages/splashPage.dart';
 
 RouteResult getRouteResult({String name, Map<String, dynamic> arguments}) {
   switch (name) {
-    case "/loginPage":
+    case '/loginPage':
       return RouteResult(
         widget: LoginPage(),
-        routeName: "loginPage",
+        routeName: 'loginPage',
       );
-    case "/playerPage":
+    case '/playerPage':
       return RouteResult(
         widget: PlayerPage(
           link: arguments['link'],
           picUrl: arguments['picUrl'],
         ),
-        routeName: "playerPage",
+        routeName: 'playerPage',
       );
-    case "/searchPage":
+    case '/searchPage':
       return RouteResult(
         widget: SearchPage(),
-        routeName: "searchPage",
+        routeName: 'searchPage',
         pageRouteType: PageRouteType.transparent,
       );
-    case "/searchResultPage":
+    case '/searchResultPage':
       return RouteResult(
         widget: SearchResultPage(
           keyword: arguments['keyword'],
         ),
-        routeName: "searchResultPage",
+        routeName: 'searchResultPage',
         pageRouteType: PageRouteType.transparent,
       );
-    case "/serialPage":
+    case '/serialPage':
       return RouteResult(
         widget: SerialPage(
           link: arguments['link'],
           title: arguments['title'],
         ),
-        routeName: "serialPage",
+        routeName: 'serialPage',
       );
-    case "app5dm://homePage":
+    case 'app5dm://homePage':
       return RouteResult(
         widget: IndexPage(),
         showStatusBar: true,
-        routeName: "homePage",
+        routeName: 'homePage',
       );
-    case "app5dm://splashPage":
+    case 'app5dm://splashPage':
       return RouteResult(
         widget: SplashPage(),
         showStatusBar: false,
-        routeName: "splashPage",
+        routeName: 'splashPage',
         pageRouteType: PageRouteType.transparent,
       );
     default:
-      return RouteResult();
+      return const RouteResult();
   }
 }
 
 class RouteResult {
+  const RouteResult({
+    this.widget,
+    this.showStatusBar = true,
+    this.routeName = '',
+    this.pageRouteType,
+    this.description = '',
+  });
+
   /// The Widget return base on route
   final Widget widget;
 
@@ -83,17 +91,19 @@ class RouteResult {
 
   /// The description of route
   final String description;
-
-  const RouteResult({
-    this.widget,
-    this.showStatusBar = true,
-    this.routeName = '',
-    this.pageRouteType,
-    this.description = '',
-  });
 }
 
 enum PageRouteType { material, cupertino, transparent }
+
+const List<String> routeNames = <String>[
+  '/loginPage',
+  '/playerPage',
+  '/searchPage',
+  '/searchResultPage',
+  '/serialPage',
+  'app5dm://homePage',
+  'app5dm://splashPage'
+];
 
 class Routes {
   const Routes._();
@@ -102,21 +112,21 @@ class Routes {
   ///
   /// [name] : /loginPage
   /// [routeName] : loginPage
-  static const String LOGINPAGE = "/loginPage";
+  static const String LOGINPAGE = '/loginPage';
 
   /// playerPage
   ///
   /// [name] : /playerPage
   /// [routeName] : playerPage
   /// [arguments] : [link, picUrl]
-  static const String PLAYERPAGE = "/playerPage";
+  static const String PLAYERPAGE = '/playerPage';
 
   /// searchPage
   ///
   /// [name] : /searchPage
   /// [routeName] : searchPage
   /// [pageRouteType] : PageRouteType.transparent
-  static const String SEARCHPAGE = "/searchPage";
+  static const String SEARCHPAGE = '/searchPage';
 
   /// searchResultPage
   ///
@@ -124,21 +134,21 @@ class Routes {
   /// [routeName] : searchResultPage
   /// [arguments] : [keyword]
   /// [pageRouteType] : PageRouteType.transparent
-  static const String SEARCHRESULTPAGE = "/searchResultPage";
+  static const String SEARCHRESULTPAGE = '/searchResultPage';
 
   /// serialPage
   ///
   /// [name] : /serialPage
   /// [routeName] : serialPage
   /// [arguments] : [link, title]
-  static const String SERIALPAGE = "/serialPage";
+  static const String SERIALPAGE = '/serialPage';
 
   /// homePage
   ///
   /// [name] : app5dm://homePage
   /// [routeName] : homePage
   /// [showStatusBar] : true
-  static const String APP5DM_HOMEPAGE = "app5dm://homePage";
+  static const String APP5DM_HOMEPAGE = 'app5dm://homePage';
 
   /// splashPage
   ///
@@ -146,5 +156,5 @@ class Routes {
   /// [routeName] : splashPage
   /// [showStatusBar] : false
   /// [pageRouteType] : PageRouteType.transparent
-  static const String APP5DM_SPLASHPAGE = "app5dm://splashPage";
+  static const String APP5DM_SPLASHPAGE = 'app5dm://splashPage';
 }

@@ -14,11 +14,6 @@ Future<String> transformIframe({String iframeUrl}) async {
 
 // 时间表
 List<VideoItems> tranferVideoItem(String html) {
-  // var exg = new RegExp(r'matrix3d\d');
-  //  String str = 'matrix3d3(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4)matrix3d4';
-  //  print(exg.allMatches(str).toList()[0].group(0));
-  //  print(exg.allMatches(str).toList()[1].group(0));
-  // RegExp timeline = new RegExp(r'');
   Document document = parse(html);
   Element wpbWrappper = document.querySelector('.wpb_wrapper');
   // smartboxs 周日到周一

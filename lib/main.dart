@@ -39,26 +39,28 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: '5dm',
           theme: themeModel.themeData,
-          navigatorObservers: [
-            FFNavigatorObserver(routeChange: (RouteSettings newRouteSettings,
-                RouteSettings oldRouteSettings) {
-              // track page here
-              if (newRouteSettings is FFRouteSettings &&
-                  oldRouteSettings is FFRouteSettings) {
-                if (newRouteSettings?.showStatusBar !=
-                    oldRouteSettings?.showStatusBar) {
-                  if (newRouteSettings?.showStatusBar == true) {
-                    SystemChrome.setEnabledSystemUIOverlays(
-                        SystemUiOverlay.values);
-                    SystemChrome.setSystemUIOverlayStyle(
-                        SystemUiOverlayStyle.dark);
-                  } else {
-                    SystemChrome.setEnabledSystemUIOverlays([]);
-                  }
-                }
-              }
-            })
-          ],
+          // navigatorObservers: [
+          //   FFNavigatorObserver(routeChange: ( newRoute,
+          //        oldRoute) {
+          //     // track page here
+          //     var newRouteSettings = newRoute.settings;
+          //     var oldRouteSettings = oldRoute.settings;
+          //     if (newRouteSettings is FFRouteSettings &&
+          //         oldRouteSettings is FFRouteSettings) {
+          //       if (newRouteSettings?.showStatusBar !=
+          //           oldRouteSettings?.showStatusBar) {
+          //         if (newRouteSettings?.showStatusBar == true) {
+          //           SystemChrome.setEnabledSystemUIOverlays(
+          //               SystemUiOverlay.values);
+          //           SystemChrome.setSystemUIOverlayStyle(
+          //               SystemUiOverlayStyle.dark);
+          //         } else {
+          //           SystemChrome.setEnabledSystemUIOverlays([]);
+          //         }
+          //       }
+          //     }
+          //   })
+          // ],
           builder: (c, w) {
             ScreenUtil.init(c, width: 750, height: 1334);
             MediaQueryData data = MediaQuery.of(c);

@@ -95,7 +95,7 @@ class MoreTitle extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).pushNamed(Routes.SERIALPAGE,
                         arguments: {
-                          "link": videoItem.more,
+                          
                           "title": videoItem.title
                         });
                   },

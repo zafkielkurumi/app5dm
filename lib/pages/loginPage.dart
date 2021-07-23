@@ -5,6 +5,7 @@ import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/index.dart';
 import 'package:flutter/material.dart';
 import 'package:ff_annotation_route/ff_annotation_route.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 @FFRoute(
@@ -28,7 +29,6 @@ class LoginPage extends StatelessWidget {
             onTap: () {
               FocusScope.of(context).requestFocus(FocusNode());
             },
-         
             child: Theme(
               data:
                   Theme.of(context).copyWith(splashFactory: NoSplashFactory()),
@@ -137,8 +137,14 @@ class LoginButton extends StatelessWidget {
               child: Selector<UserModel, ViewState>(
                   builder: (_, viewState, child) {
                     return viewState == ViewState.pending
-                        ? Text('登录中...', style: TextStyle(color: Colors.white),)
-                        : Text('登录', style: TextStyle(color: Colors.white),);
+                        ? Text(
+                            '登录中...',
+                            style: TextStyle(color: Colors.white),
+                          )
+                        : Text(
+                            '登录',
+                            style: TextStyle(color: Colors.white),
+                          );
                   },
                   selector: (_, userModel) => userModel.viewState),
             );

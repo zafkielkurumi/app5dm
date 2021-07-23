@@ -120,7 +120,7 @@ class Links {
 // {
 //  "title": "33",
 // "brief":"55",
-// "videoSrc": "fff",
+// "video_src": "fff",
 // "sources":[
 //  {
 //  "sourceTitle":"44",
