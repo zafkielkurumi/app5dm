@@ -9,18 +9,18 @@ import 'package:app5dm/utils/index.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:app5dm/widgets/index.dart';
 import 'package:flutter/material.dart' hide NestedScrollView;
-import 'package:ff_annotation_route/ff_annotation_route.dart';
+// import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:flutter_ijkplayer/flutter_ijkplayer.dart';
 import 'package:provider/provider.dart';
 
 import 'brief.dart';
 import 'playerHeader.dart';
 
-@FFRoute(
-  name: "/playerPage",
-  routeName: "playerPage",
-  argumentNames: ["link", 'picUrl'],
-)
+// @FFRoute(
+//   name: "/playerPage",
+//   routeName: "playerPage",
+//   argumentNames: ["link", 'picUrl'],
+// )
 class PlayerPage extends StatefulWidget {
   final String link;
   final String picUrl;

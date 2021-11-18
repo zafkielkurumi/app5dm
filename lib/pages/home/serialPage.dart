@@ -4,14 +4,14 @@ import 'package:app5dm/providers/serialProvider.dart';
 import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/index.dart';
 import 'package:flutter/material.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
+// import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:provider/provider.dart';
 
-@FFRoute(
-  name: "/serialPage",
-  routeName: "serialPage",
-  argumentNames: ["link", "title"],
-)
+// @FFRoute(
+//   name: "/serialPage",
+//   routeName: "serialPage",
+//   argumentNames: ["link", "title"],
+// )
 class SerialPage extends StatelessWidget {
   final String link;
   final String title;

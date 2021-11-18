@@ -4,14 +4,14 @@ import 'package:app5dm/providers/userProvider.dart';
 import 'package:app5dm/utils/index.dart';
 import 'package:app5dm/widgets/index.dart';
 import 'package:flutter/material.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
+// import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-@FFRoute(
-  name: "/loginPage",
-  routeName: "loginPage",
-)
+// @FFRoute(
+//   name: "/loginPage",
+//   routeName: "loginPage",
+// )
 class LoginPage extends StatelessWidget {
   final TextEditingController pwdController = TextEditingController();
   final TextEditingController userNameController = TextEditingController();

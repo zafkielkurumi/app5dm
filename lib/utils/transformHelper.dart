@@ -1,15 +1,31 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
+
 import 'netHelper.dart';
 import 'package:app5dm/models/index.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:html/dom.dart';
 import 'package:app5dm/constants/config.dart';
 
-
 Future<String> transformIframe({String iframeUrl}) async {
-  var res = await NetUtil.dio.get(iframeUrl);
-  RegExp regExp = RegExp(r'srcUrl={.*(https://api.5dm.tv.*\.mp4)');
-  RegExpMatch match = regExp.firstMatch(res.toString());
-  return match.group(1);
+  print(BASE_URL + iframeUrl);
+  var res = await NetUtil.dio.get(BASE_URL + iframeUrl,
+      options: Options(headers: {'referer': 'https://www.5dm.app'}));
+  RegExp regExp = RegExp(r'https://www.5dm.app.*\.mp4');
+  // RegExpMatch match = regExp.firstMatch(res.toString());
+  Document document = parse(res.toString());
+  List<Element> scriptList = document.querySelectorAll('script');
+  Element script = scriptList.last;
+  print(script.text);
+  String text = script.text.replaceAll("'", '"');
+  RegExp regConfig = RegExp(r'config\s*=\s*({[\s | \S]*})');
+  RegExpMatch match = regConfig.firstMatch(text);
+  print(match[1]);
+  Map config = jsonDecode(match[1]);
+    print('-===========');
+   print(config);
+  return config['url'];
 }
 
 // 时间表
@@ -65,7 +81,8 @@ List<Seasons> transformSeasons(List<Element> videoItems) {
     //    continue;
     //  }
     String imgUrl = videoItem.querySelector('img').attributes['data-original'];
-    imgUrl = imgUrl.startsWith('$BASE_URL') ? imgUrl : '$BASE_URL$imgUrl';
+    // imgUrl = imgUrl.startsWith('$BASE_URL') ? imgUrl : '$BASE_URL$imgUrl';
+    imgUrl = imgUrl;
 
     stringId = stringId;
     seasons.add(Seasons(
@@ -122,11 +139,7 @@ Future<VideoDetail> tranferDetail(String html) async {
     sources.add(Sources(links: links, sourceTitle: sourceTitle));
   });
   return VideoDetail(
-    sources: sources,
-    videoSrc: videoSrc,
-    title: videoTitle,
-    brief: brief
-  );
+      sources: sources, videoSrc: videoSrc, title: videoTitle, brief: brief);
 }
 
 bool checkIsLogin(String html) {
@@ -138,3 +151,21 @@ bool checkIsLogin(String html) {
   return false;
 }
 
+        //  var up = {
+        //      "usernum": "",
+        //      "mylink": "/bgm/",
+        //      "diyid": [0, '游客', 1]
+        //  }
+        //  var config = {
+        //      "api": '/player/',
+        //      "av": '',
+        //      "url": "https://dv.5dm.app/5/banyaodeycs1.mp4?query_string=should_be_calcuated&_tcshare=031cbc72717d4e7435f4d1b",
+        //      "id": "banyaodeycs1",
+        //      "sid": "",
+        //      "pic": "",
+        //      "title": "",
+        //      "next": "dv46141?link=1",
+        //      "user": '0',
+        //      "group": ""
+        //  }
+        //  YZM.start()

@@ -1,12 +1,12 @@
 import 'package:app5dm/utils/index.dart';
 import 'package:flutter/material.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
+// import 'package:ff_annotation_route/ff_annotation_route.dart';
 
-@FFRoute(
-  name: "/searchPage",
-  routeName: "searchPage",
-  pageRouteType: PageRouteType.transparent
-)
+// @FFRoute(
+//   name: "/searchPage",
+//   routeName: "searchPage",
+//   pageRouteType: PageRouteType.transparent
+// )
 
 class SearchPage extends StatelessWidget {
   @override

@@ -1,14 +1,14 @@
 import 'package:app5dm/app5dm_route.dart' hide PageRouteType;
 import 'package:app5dm/constants/images.dart';
 import 'package:flutter/material.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
+// import 'package:ff_annotation_route/ff_annotation_route.dart';
 
-@FFRoute(
-  name: "app5dm://splashPage",
-  routeName: "splashPage",
-  showStatusBar: false,
-  pageRouteType: PageRouteType.transparent,
-)
+// @FFRoute(
+//   name: "app5dm://splashPage",
+//   routeName: "splashPage",
+//   showStatusBar: false,
+//   pageRouteType: PageRouteType.transparent,
+// )
 
 
 class SplashPage extends StatefulWidget {

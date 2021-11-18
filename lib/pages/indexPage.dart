@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:app5dm/pages/home/home.dart';
 import 'package:app5dm/pages/timetablePage.dart';
-import 'package:ff_annotation_route/ff_annotation_route.dart';
+// import 'package:ff_annotation_route/ff_annotation_route.dart';
 import 'package:oktoast/oktoast.dart';
 
 
-@FFRoute(
-  name: "app5dm://homePage",
-  routeName: "homePage",
-  showStatusBar: true
-)
+// @FFRoute(
+//   name: "app5dm://homePage",
+//   routeName: "homePage",
+//   showStatusBar: true
+// )
 
 class IndexPage extends StatefulWidget {
   @override
